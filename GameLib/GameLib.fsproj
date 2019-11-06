@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="common\AutoCancelAgent.fs" />
+    <Compile Include="common\AppData.fs" />
+    <Compile Include="common\Cards.fs" />
+    <Compile Include="common\Messages.fs" />
+    <Compile Include="common\IGame.fs" />
+    <Compile Include="common\MessagePushers.fs" />
+    <Compile Include="common\GameFormWrapper.fs" />
+    <Compile Include="common\PlayerPC.fs" />
+    <Compile Include="common\PlayerLocal.fs" />
+    <Compile Include="common\PlayerRemoteServer.fs" />
+    <Compile Include="common\GameSolver.fs" />
+    <Compile Include="common\Game.fs" />
+    <Compile Include="common\GameC.fs" />
+    <Compile Include="common\ClientConnection.fs" />
+    <Compile Include="common\AppClient.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FsPickler" Version="5.2.2" />
+    <PackageReference Include="System.Collections.Immutable" Version="1.6.0" />
+  </ItemGroup>
+
+</Project>
