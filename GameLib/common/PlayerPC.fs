@@ -118,8 +118,7 @@ type private PlayerPC (game, playernr, playername, delay, gamesolver, uuid) as t
                 if cur_state.cards.Cards.Count <> 8 then failwith "Got no cards"
                 let bebig = GameSolver.WantBeBig cur_state.cards
                 let new_playertype = if bebig then PlayerGameType.Big else PlayerGameType.NotSet
-                //Game.ReplyBeBig PlayerNr bebig false
-                Game.ReplyBeBig PlayerNr false false
+                Game.ReplyBeBig PlayerNr bebig false
                 {cur_state with playerType = new_playertype}
             |MsgToPlayer.FromGame AskBury -> 
                 if cur_state.cards.Cards.Count <> 10 then failwith "Got no cards"
