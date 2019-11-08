@@ -166,10 +166,12 @@ namespace ZoleX
         public void OnStarted() => Started?.Invoke(this, new StringEventArgs(PlayerName));
         public void OnBtPlayOnlineClick() => BtPlayOnlineClicked?.Invoke(this, new EventArgs());
         public void OnBtSettingsClicked() => BtSettingsClicked?.Invoke(this, new EventArgs());
+        public void OnBtExitClicked() => BtExitClicked?.Invoke(this, new EventArgs());
 
         public event EventHandler<StringEventArgs> Started;
         public event EventHandler BtPlayOnlineClicked;
         public event EventHandler BtSettingsClicked;
+        public event EventHandler BtExitClicked;
     }
 
     public class PointsRow

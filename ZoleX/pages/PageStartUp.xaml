@@ -58,6 +58,15 @@
                             </Button.Behaviors>
                         </Button>
 
+                        <Button Text="Aizvērt" 
+                        Margin="0,20,0,0">
+                            <Button.Behaviors>
+                                <i:EventHandlerBehavior EventName="Clicked">
+                                    <i:InvokeMethodAction TargetObject="{Binding}" MethodName="OnBtExitClicked" />
+                                </i:EventHandlerBehavior>
+                            </Button.Behaviors>
+                        </Button>
+
                     </StackLayout>
 
                 </FlexLayout>

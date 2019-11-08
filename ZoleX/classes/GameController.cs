@@ -118,6 +118,7 @@ namespace ZoleX
             StartUpPageVM.Started += StartUpPageVM_Started;
             StartUpPageVM.BtPlayOnlineClicked += StartUpPageVM_BtPlayOnlineClicked;
             StartUpPageVM.BtSettingsClicked += StartUpPageVM_BtSettingsClicked;
+            StartUpPageVM.BtExitClicked += StartUpPageVM_BtExitClicked;
 
             SettingsPageVM.BtOkClicked += SettingsPageVM_BtOkClicked;
 
@@ -259,6 +260,12 @@ namespace ZoleX
             SettingsPageVM.ServerPort = ServerPort;
 
             App.MainPage = PageSettings;
+        }
+
+        private void StartUpPageVM_BtExitClicked(object sender, EventArgs e)
+        {
+            WriteToRegistry();
+            App.DoQuit();
         }
 
         private void SettingsPageVM_BtOkClicked(object sender, EventArgs e)
