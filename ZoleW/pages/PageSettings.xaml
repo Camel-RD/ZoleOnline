@@ -49,15 +49,18 @@
                 </Label.Template>
             </Label>
 
-            <CheckBox Content="Rādīt pogu ar bulyu" 
+            <CheckBox Content="Rādīt pogu ar bultu" 
+                      FontSize="18"
                       Margin="10"
                       IsChecked="{Binding ShowArrow}"/>
             
             <CheckBox Content="Saglabāt servera paroli" 
+                      FontSize="18"
                       Margin="10"
                       IsChecked="{Binding RememberPsw}"/>
 
             <CheckBox Content="Nerādīt pogu Online spēle" 
+                      FontSize="18"
                       Margin="10"
                       IsChecked="{Binding HideOnlineGameButton}"/>
             <Label Content="Servera IP adrese un ports:"/>

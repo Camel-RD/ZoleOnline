@@ -25,7 +25,7 @@ namespace ZoleW
         public static PointsPageVM PointsPageVM => PointsPageVM.DTST;
         public static GamePageVM GamePageVM => DTGamePageVM.GamePageVM;
         public static LobbyPageVM LobbyPageVM => LobbyPageVM.ST;
-        public static CalendarPageVM CalendarPageVM => CalendarPageVM.St;
+        public static CalendarPageVM CalendarPageVM => CalendarPageVM.ST;
     }
 
 }

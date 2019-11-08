@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:i="clr-namespace:Behaviors;assembly=Behaviors"
+             xmlns:local="clr-namespace:ZoleX"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             BackgroundColor="{DynamicResource PageBackgroundColor}"
+             x:Class="ZoleX.PageLogIn"
+             d:BindingContext="{Binding Source={x:Static local:Locator.LogInPageVM}}">
+    
+    <ContentPage.Content>
+        <Grid>
+            
+            <StackLayout VerticalOptions="Center">
+
+                <FlexLayout Wrap="Wrap" 
+                            AlignItems="Center" 
+                            JustifyContent="Center">
+
+                    <StackLayout Margin="20">
+
+                        <Label Text="Tavs vārds:" Margin="0"/>
+                        <local:MyEntry WidthRequest="200" 
+                                   Text="{Binding Name}"/>
+
+                        <Label Text="Parole:" Margin="0,20,0,0"/>
+                        <local:MyEntry WidthRequest="200" 
+                                   Text="{Binding Psw}"/>
+
+                    </StackLayout>
+
+                    <StackLayout WidthRequest="150"
+                             MinimumWidthRequest="150"
+                             Margin="20">
+
+                        <Button Text="Ieiet" 
+                                HorizontalOptions="FillAndExpand"
+                                Margin="0,0,0,0">
+                            <Button.Behaviors>
+                                <i:EventHandlerBehavior EventName="Clicked">
+                                    <i:InvokeMethodAction TargetObject="{Binding}" MethodName="OnLogInClick" />
+                                </i:EventHandlerBehavior>
+                            </Button.Behaviors>
+                        </Button>
+
+                        <Button Text="Ieiet kā viesis" 
+                        Margin="0,20,0,0">
+
+                            <Button.Behaviors>
+                                <i:EventHandlerBehavior EventName="Clicked">
+                                    <i:InvokeMethodAction TargetObject="{Binding}" MethodName="OnLogInAsGuestClick" />
+                                </i:EventHandlerBehavior>
+                            </Button.Behaviors>
+                        </Button>
+
+                        <Button Text="Reģistrēties" 
+                        Margin="0,20,0,0">
+                            <Button.Behaviors>
+                                <i:EventHandlerBehavior EventName="Clicked">
+                                    <i:InvokeMethodAction TargetObject="{Binding}" MethodName="OnRegisterClick" />
+                                </i:EventHandlerBehavior>
+                            </Button.Behaviors>
+                        </Button>
+
+                        <StackLayout Orientation="Horizontal" Margin="0,20,0,0">
+
+                            <Button Text="Atcelt" 
+                                    HorizontalOptions="StartAndExpand"
+                                    Margin="0,0,0,0">
+                                <Button.Behaviors>
+                                    <i:EventHandlerBehavior EventName="Clicked">
+                                        <i:InvokeMethodAction TargetObject="{Binding}" MethodName="OnCancelClick" />
+                                    </i:EventHandlerBehavior>
+                                </Button.Behaviors>
+                            </Button>
+
+                            <Button Text="?" 
+                                    HorizontalOptions="End"
+                                    WidthRequest="50"
+                                    Margin="10,0,0,0">
+                                <Button.Behaviors>
+                                    <i:EventHandlerBehavior EventName="Clicked">
+                                        <i:InvokeMethodAction TargetObject="{Binding}" MethodName="OnHelpClick" />
+                                    </i:EventHandlerBehavior>
+                                </Button.Behaviors>
+                            </Button>
+
+
+                        </StackLayout>
+
+                    </StackLayout>
+
+                </FlexLayout>
+            </StackLayout>
+        </Grid>
+        
+    </ContentPage.Content>
+</ContentPage>

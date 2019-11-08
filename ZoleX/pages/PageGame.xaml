@@ -1,0 +1,312 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="clr-namespace:ZoleX"
+             xmlns:design="clr-namespace:ZoleX;assembly=ZoleX"
+             xmlns:behaviors="clr-namespace:Behaviors;assembly=Behaviors"
+             mc:Ignorable="d"
+             x:Class="ZoleX.PageGame"
+             BackgroundColor="{DynamicResource PageBackgroundColor}"
+             d:BindingContext="{x:Static design:Locator.GamePageVM}">
+    
+    <ContentPage.Resources>
+
+        <Thickness x:Key="CardMarginNormal" Left="3" Top="20" Right="0" Bottom="0"/>
+        <Thickness x:Key="CardMarginSelected" Left="3" Top="0" Right="0" Bottom="0"/>
+        <Color x:Key="NameHighlightColor">Orange</Color>
+
+        <Style x:Key="NamePlate" TargetType="Label">
+            <Setter Property="HorizontalTextAlignment" Value="Center"/>
+            <Setter Property="WidthRequest" Value="65"/>
+            <Setter Property="FontSize" Value="Small"/>
+        </Style>
+
+        <Style x:Key="CardD" TargetType="{x:Type Image}">
+            <Setter Property="WidthRequest" Value="{Binding Source={x:Static local:Locator.CardWidth}}"/>
+            <Setter Property="HeightRequest" Value="{Binding Source={x:Static local:Locator.CardHeight}}"/>
+            <Setter Property="Aspect" Value="AspectFit"/>
+            <Setter Property="HorizontalOptions" Value="Center"/>
+        </Style>
+
+        <Style x:Key="CardM" TargetType="{x:Type Image}">
+            <Setter Property="WidthRequest" Value="{Binding Source={x:Static local:Locator.CardWidth}}"/>
+            <Setter Property="HeightRequest" Value="{Binding Source={x:Static local:Locator.CardHeight}}"/>
+            <Setter Property="Aspect" Value="AspectFit"/>
+            <Setter Property="Margin" Value="{StaticResource CardMarginNormal}"/>
+        
+            <Style.Triggers>
+                <DataTrigger TargetType="Image" Binding="{Binding IsSelected}" Value="true">
+                    <Setter Property="Margin" Value="{StaticResource CardMarginSelected}"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="CardF" TargetType="Image">
+            <Setter Property="WidthRequest" Value="71"/>
+            <Setter Property="HeightRequest" Value="96"/>
+            <Setter Property="Aspect" Value="AspectFit"/>
+        </Style>
+    </ContentPage.Resources>
+
+    
+    
+    <ContentPage.Content>
+        <StackLayout>
+
+            <FlexLayout AlignItems="Center"
+                    JustifyContent="SpaceEvenly"
+                    Wrap="Wrap">
+               
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition Height="{Binding Source={x:Static local:Locator.CardRowHeight}}"/>
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="{Binding Source={x:Static local:Locator.CardColumnWidth}}"/>
+                        <ColumnDefinition Width="{Binding Source={x:Static local:Locator.CardColumnWidth}}"/>
+                        <ColumnDefinition Width="{Binding Source={x:Static local:Locator.CardColumnWidth}}"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.Triggers>
+                        <DataTrigger TargetType="Grid" Binding="{Binding IsNamePlatesVisible}" Value="False">
+                            <Setter Property="IsVisible" Value="false"/>
+                        </DataTrigger>
+                    </Grid.Triggers>
+
+                    <Label Grid.Row="0" Grid.Column="0"
+                           Text="{Binding Path=PlayerName1}" 
+                           Style="{StaticResource NamePlate}">
+                        <Label.Triggers>
+                            <DataTrigger TargetType="Label" Binding="{Binding IsNameHighlighted1}" Value="true">
+                                <Setter Property="TextColor" Value="{StaticResource NameHighlightColor}"/>
+                            </DataTrigger>
+                        </Label.Triggers>
+                    </Label>
+
+                    <Image Source="{Binding CardsOnDesk1.ImgSource}"
+                       Grid.Row="1" Grid.Column="0"
+                       Style="{StaticResource CardD}"
+                       Margin="0,0,0,10"/>
+
+                    <Image Grid.Row="1" Grid.Column="1"
+                           Source="{Binding CardsOnDesk2.ImgSource}"
+                           Margin="0,10,0,0"
+                           Style="{StaticResource CardD}"/>
+
+                    <Label Grid.Row="2" Grid.Column="1"
+                           Style="{StaticResource NamePlate}"
+                           Text="{Binding Path=PlayerName2}">
+
+                        <Label.Triggers>
+                            <DataTrigger TargetType="Label" Binding="{Binding IsNameHighlighted2}" Value="true">
+                                <Setter Property="TextColor" Value="{StaticResource NameHighlightColor}"/>
+                            </DataTrigger>
+                        </Label.Triggers>
+
+                    </Label>
+
+                    <Label Grid.Row="0" Grid.Column="2"
+                           Style="{StaticResource NamePlate}"
+                           Text="{Binding Path=PlayerName3}">
+
+                        <Label.Triggers>
+                            <DataTrigger TargetType="Label" Binding="{Binding IsNameHighlighted3}" Value="true">
+                                <Setter Property="TextColor" Value="{StaticResource NameHighlightColor}"/>
+                            </DataTrigger>
+                        </Label.Triggers>
+
+                    </Label>
+                    <Image Grid.Row="1" Grid.Column="2"
+                       Source="{Binding CardsOnDesk3.ImgSource}"
+                       Margin="0,0,0,10"
+                       Style="{StaticResource CardD}"/>
+
+                </Grid>
+
+                <StackLayout Margin="6"
+                             MinimumWidthRequest="280"
+                             WidthRequest="280">
+                    <Label MinimumWidthRequest="270"
+                           HorizontalTextAlignment="Center"
+                           WidthRequest="270"
+                           HeightRequest="80"
+                           Margin="0,0,5,0"
+                           Text="{Binding Message}"/>
+
+                    <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+                        <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+
+                            <StackLayout.Triggers>
+                                <DataTrigger TargetType="StackLayout" Binding="{Binding IsYesNoPanelVisible}" Value="False">
+                                    <Setter Property="IsVisible" Value="false"/>
+                                </DataTrigger>
+                            </StackLayout.Triggers>
+
+
+                            <Button Text="Jā">
+                                <Button.Behaviors>
+                                    <behaviors:EventHandlerBehavior EventName="Clicked">
+                                        <behaviors:InvokeMethodAction TargetObject="{Binding}" MethodName="OnYesClick" />
+                                    </behaviors:EventHandlerBehavior>
+                                </Button.Behaviors>
+                            </Button>
+
+                            <Button Text="Nē">
+                                <Button.Behaviors>
+                                    <behaviors:EventHandlerBehavior EventName="Clicked">
+                                        <behaviors:InvokeMethodAction TargetObject="{Binding}" MethodName="OnNoClick" />
+                                    </behaviors:EventHandlerBehavior>
+                                </Button.Behaviors>
+                            </Button>
+
+                            <Button Text="Zole">
+                                <Button.Behaviors>
+                                    <behaviors:EventHandlerBehavior EventName="Clicked">
+                                        <behaviors:InvokeMethodAction TargetObject="{Binding}" MethodName="OnZoleClick" />
+                                    </behaviors:EventHandlerBehavior>
+                                </Button.Behaviors>
+                                <Button.Triggers>
+                                    <DataTrigger TargetType="Button" Binding="{Binding IsButtonZoleVisible}" Value="False">
+                                        <Setter Property="IsVisible" Value="false"/>
+                                    </DataTrigger>
+                                </Button.Triggers>
+                            </Button>
+
+                        </StackLayout>
+
+                        <Button Text=">>" HorizontalOptions="Center">
+                            <Button.Triggers>
+                                <DataTrigger TargetType="Button" Binding="{Binding IsButtonGoVisible}" Value="False">
+                                    <Setter Property="IsVisible" Value="false"/>
+                                </DataTrigger>
+                            </Button.Triggers>
+                            <Button.Behaviors>
+                                <behaviors:EventHandlerBehavior EventName="Clicked">
+                                    <behaviors:InvokeMethodAction TargetObject="{Binding}" MethodName="OnBtGoClicked" />
+                                </behaviors:EventHandlerBehavior>
+                            </Button.Behaviors>
+                        </Button>
+
+                    </StackLayout>
+                    
+                </StackLayout>
+
+            </FlexLayout>
+
+            <StackLayout Orientation="Horizontal"
+                         VerticalOptions="EndAndExpand">
+
+                <StackLayout.Triggers>
+                    <DataTrigger TargetType="StackLayout" Binding="{Binding IsPointsVisible}" Value="False">
+                        <Setter Property="IsVisible" Value="false"/>
+                    </DataTrigger>
+                </StackLayout.Triggers>
+
+                <Label Text="Punkti:" />
+                <Label Text="{Binding Path=Points}" Margin="1,0,0,0"/>
+            </StackLayout>
+
+
+            <FlexLayout x:Name="FLCarDeck"
+                        Wrap="Wrap"
+                        VerticalOptions="End">
+
+                <Image x:Name="ImCard1" 
+                       BindingContext="{Binding Card1}"
+                       Source="{Binding ImgSource, Mode=OneWay}"
+                       Style="{StaticResource CardM}">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnCardTap" NumberOfTapsRequired="1" />
+                    </Image.GestureRecognizers>
+                </Image>
+
+                <Image x:Name="ImCard2" 
+                       BindingContext="{Binding Card2}"
+                       Source="{Binding ImgSource, Mode=OneWay}"
+                       Style="{StaticResource CardM}">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnCardTap" NumberOfTapsRequired="1" />
+                    </Image.GestureRecognizers>
+                </Image>
+
+                <Image x:Name="ImCard3" 
+                       BindingContext="{Binding Card3}"
+                       Source="{Binding ImgSource, Mode=OneWay}"
+                       Style="{StaticResource CardM}">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnCardTap" NumberOfTapsRequired="1" />
+                    </Image.GestureRecognizers>
+                </Image>
+
+                <Image x:Name="ImCard4" 
+                       BindingContext="{Binding Card4}"
+                       Source="{Binding ImgSource, Mode=OneWay}"
+                       Style="{StaticResource CardM}">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnCardTap" NumberOfTapsRequired="1" />
+                    </Image.GestureRecognizers>
+                </Image>
+
+                <Image x:Name="ImCard5" 
+                       BindingContext="{Binding Card5}"
+                       Source="{Binding ImgSource, Mode=OneWay}"
+                       Style="{StaticResource CardM}">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnCardTap" NumberOfTapsRequired="1" />
+                    </Image.GestureRecognizers>
+                </Image>
+
+                <Image x:Name="ImCard6" 
+                       BindingContext="{Binding Card6}"
+                       Source="{Binding ImgSource, Mode=OneWay}"
+                       Style="{StaticResource CardM}">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnCardTap" NumberOfTapsRequired="1" />
+                    </Image.GestureRecognizers>
+                </Image>
+
+                <Image x:Name="ImCard7" 
+                       BindingContext="{Binding Card7}"
+                       Source="{Binding ImgSource, Mode=OneWay}"
+                       Style="{StaticResource CardM}">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnCardTap" NumberOfTapsRequired="1" />
+                    </Image.GestureRecognizers>
+                </Image>
+
+                <Image x:Name="ImCard8" 
+                       BindingContext="{Binding Card8}"
+                       Source="{Binding ImgSource, Mode=OneWay}"
+                       Style="{StaticResource CardM}">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnCardTap" NumberOfTapsRequired="1" />
+                    </Image.GestureRecognizers>
+                </Image>
+
+                <Image x:Name="ImCard9" 
+                       BindingContext="{Binding Card9}"
+                       Source="{Binding ImgSource, Mode=OneWay}"
+                       Style="{StaticResource CardM}">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnCardTap" NumberOfTapsRequired="1" />
+                    </Image.GestureRecognizers>
+                </Image>
+
+                <Image x:Name="ImCard10"
+                       BindingContext="{Binding Card10}"
+                       Source="{Binding ImgSource, Mode=OneWay}"
+                       Style="{StaticResource CardM}">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnCardTap" NumberOfTapsRequired="1" />
+                    </Image.GestureRecognizers>
+                </Image>
+            </FlexLayout>
+
+
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

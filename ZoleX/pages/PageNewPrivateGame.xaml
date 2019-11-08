@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:i="clr-namespace:Behaviors;assembly=Behaviors"
+             xmlns:local="clr-namespace:ZoleX"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             BackgroundColor="{DynamicResource PageBackgroundColor}"
+             x:Class="ZoleX.PageNewPrivateGame"
+             d:BindingContext="{Binding Source={x:Static local:Locator.NewPrivateGamePageVM}}">
+    
+    <ContentPage.Content>
+        <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
+
+            <FlexLayout Wrap="Wrap" 
+                        AlignItems="Center" 
+                        JustifyContent="Center">
+
+                <StackLayout Margin="20" WidthRequest="200">
+
+                    <Label Text="Spēles nosaukums:" Margin="0"/>
+                    <local:MyEntry WidthRequest="200" 
+                                   Text="{Binding Name}"/>
+
+                    <Label Text="Spēles parole:" Margin="0,20,0,0"/>
+                    <local:MyEntry WidthRequest="200" 
+                                   Text="{Binding Psw}"/>
+
+                </StackLayout>
+
+                <StackLayout Margin="20" WidthRequest="200">
+
+                    <Button Text="Pievienoties" 
+                                HorizontalOptions="FillAndExpand"
+                                Margin="0,0,0,0">
+                        <Button.Behaviors>
+                            <i:EventHandlerBehavior EventName="Clicked">
+                                <i:InvokeMethodAction TargetObject="{Binding}" MethodName="OnJoinClick" />
+                            </i:EventHandlerBehavior>
+                        </Button.Behaviors>
+                    </Button>
+
+                    <Button Text="Atcelt" 
+                        Margin="0,20,0,0">
+
+                        <Button.Behaviors>
+                            <i:EventHandlerBehavior EventName="Clicked">
+                                <i:InvokeMethodAction TargetObject="{Binding}" MethodName="OnCancelClick" />
+                            </i:EventHandlerBehavior>
+                        </Button.Behaviors>
+                    </Button>
+
+                </StackLayout>
+
+            </FlexLayout>
+        </StackLayout>
+
+    </ContentPage.Content>
+</ContentPage>

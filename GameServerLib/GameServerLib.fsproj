@@ -7,6 +7,7 @@
   <ItemGroup>
     <Compile Include="server\AppData.fs" />
     <Compile Include="server\IServer.fs" />
+    <Compile Include="server\CalendarData.fs" />
     <Compile Include="server\UserData.fs" />
     <Compile Include="server\ServerMessages.fs" />
     <Compile Include="server\MessagePusher.fs" />

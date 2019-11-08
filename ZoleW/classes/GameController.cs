@@ -189,13 +189,11 @@ namespace ZoleW
             if (string.IsNullOrEmpty(UserName)) UserName = "Es";
             StartUpPageVM.PlayerName = UserName;
             StartUpPageVM.ShowOnlineGame = !HideOnlineGameButton;
-            if (string.IsNullOrEmpty(ServerIp)) ServerIp = "localhost";
+            if (string.IsNullOrEmpty(ServerIp)) ServerIp = "klons.id.lv";
             if (string.IsNullOrEmpty(ServerPort)) ServerPort = "7777";
 
             var gameformwrapped = GameFormWrapper.GetGUIWrapper(this);
             AppClient = new AppClient(gameformwrapped);
-
-            //(App.Current as App).StarterWindow.ConnectClient(AppClient);
 
             ToGame = (AppClient as IClient).FromGameUI;
             ToClient = (AppClient as IClient).FromClientUI;
@@ -226,6 +224,22 @@ namespace ZoleW
         {
             WriteToRegistry();
             ToClient?.AppClosing();
+        }
+
+        private void StartUpPageVM_Started(object sender, StringEventArgs e)
+        {
+            var playername = e.EventData;
+            if (string.IsNullOrEmpty(playername))
+            {
+                ShowMessage("Jānorāda vārds!");
+                return;
+            }
+            if (playername.Length > 15)
+            {
+                ShowMessage("Vārds ir par garu");
+                return;
+            }
+            PlayOfflineGame();
         }
 
         private void StartUpPageVM_BtPlayOnlineClicked(object sender, EventArgs e)
@@ -488,23 +502,6 @@ namespace ZoleW
             }
         }
 
-        private void StartUpPageVM_Started(object sender, StringEventArgs e)
-        {
-            var playername = e.EventData;
-            if (string.IsNullOrEmpty(playername))
-            {
-                ShowMessage("Jānorāda vārds!");
-                return;
-            }
-            if (playername.Length > 15)
-            {
-                ShowMessage("Vārds ir par garu");
-                return;
-            }
-
-            PlayOfflineGame();
-        }
-
         private void Game_CardClicked(object sender, IntEventArgs e)
         {
             SelectCard(e.EventData);
@@ -582,8 +579,8 @@ namespace ZoleW
             ShowArrow = (regKey.GetValue("ShowArrow", "") as string) == "Yes";
             RememberPsw = (regKey.GetValue("RememberPsw", "") as string) == "Yes";
             HideOnlineGameButton = (regKey.GetValue("HideOnlineBt", "") as string) == "Yes";
-            ServerIp = regKey.GetValue("IP", "7777") as string;
-            ServerPort = regKey.GetValue("Port", "") as string;
+            ServerIp = regKey.GetValue("IP", "") as string;
+            ServerPort = regKey.GetValue("Port", "7777") as string;
             if (ServerIp == "") ServerIp = Properties.Settings.Default.ServerIp;
         }
 
@@ -1169,7 +1166,7 @@ namespace ZoleW
         public void LostPlayerForNewGame(string name)
         {
             var pl = NewGamePageVM.Players
-                .Where(pl => pl.Name == name)
+                .Where(p => p.Name == name)
                 .FirstOrDefault();
             if (pl == null) return;
             NewGamePageVM.Players.Remove(pl);

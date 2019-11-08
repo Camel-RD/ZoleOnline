@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:i="clr-namespace:Behaviors;assembly=Behaviors"
+             mc:Ignorable="d"
+             xmlns:local="clr-namespace:ZoleX"
+             BackgroundColor="{DynamicResource PageBackgroundColor}"
+             x:Class="ZoleX.PageSettings"
+             d:BindingContext="{Binding Source={x:Static local:Locator.SettingsPageVM}}">
+    
+    <ContentPage.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            
+            <Label Text="Parametri:" 
+                   TextDecorations="Underline" 
+                   HorizontalOptions="Center"
+                   TextColor="Moccasin"
+                   Margin="10"/>
+
+            <Grid Grid.Row="1"
+                  HorizontalOptions="Center">
+
+                <FlexLayout Wrap="Wrap">
+
+                    <StackLayout Margin="20">
+
+                        <StackLayout Orientation="Horizontal" Margin="10">
+                            <Switch IsToggled="{Binding ShowArrow}"/>
+                            <Label Text="Rādīt pogu >>" VerticalOptions="Center"/>
+                        </StackLayout>
+
+                        <StackLayout Orientation="Horizontal" Margin="10">
+                            <Switch IsToggled="{Binding RememberPsw}"/>
+                            <Label Text="Saglabāt servera paroli" VerticalOptions="Center"/>
+                        </StackLayout>
+
+                        <StackLayout Orientation="Horizontal" Margin="10">
+                            <Switch IsToggled="{Binding HideOnlineGameButton}"/>
+                            <Label Text="Nerādīt pogu Online spēle" VerticalOptions="Center"/>
+                        </StackLayout>
+
+                    </StackLayout>
+
+                    <StackLayout Margin="20">
+
+                        <Label Text="Servera IP adrese:" Margin="0,10,0,0"/>
+                        <local:MyEntry Text="{Binding ServerIp}" WidthRequest="200"/>
+                        <Label Text="Servera ports:"/>
+                        <local:MyEntry Text="{Binding ServerPort}" 
+                               WidthRequest="80" 
+                               HorizontalOptions="Start"/>
+
+                    </StackLayout>
+
+                </FlexLayout>
+
+            </Grid>
+            
+            <Button Text="Ok" 
+                    WidthRequest="70"
+                    Grid.Row="2"
+                    Margin="20"
+                    HorizontalOptions="Start">
+                <Button.Behaviors>
+                    <i:EventHandlerBehavior EventName="Clicked">
+                        <i:InvokeMethodAction TargetObject="{Binding}" MethodName="OnOkClick" />
+                    </i:EventHandlerBehavior>
+                </Button.Behaviors>
+            </Button>
+
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

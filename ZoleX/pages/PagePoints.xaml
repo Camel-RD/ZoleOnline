@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="clr-namespace:ZoleX"
+             xmlns:design="clr-namespace:ZoleX;assembly=ZoleX"
+             xmlns:behaviors="clr-namespace:Behaviors;assembly=Behaviors"
+             mc:Ignorable="d"
+             x:Class="ZoleX.PagePoints"
+             BackgroundColor="{DynamicResource PageBackgroundColor}"
+             d:BindingContext="{x:Static design:Locator.PointsPageVM}">
+
+    <ContentPage.Content>
+        <StackLayout Orientation="Vertical">
+            <Label Text="Punkti:"/>
+            <Grid Margin="0,0,0,0"
+                      BackgroundColor="#404040">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"></ColumnDefinition>
+                    <ColumnDefinition Width="1*"></ColumnDefinition>
+                    <ColumnDefinition Width="1*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <Label Text="{Binding PlayerName1}" HorizontalOptions="Center" VerticalOptions="Center" Grid.Column="0" TextColor="White"/>
+                <Label Text="{Binding PlayerName2}" HorizontalOptions="Center" VerticalOptions="Center" Grid.Column="1" TextColor="White"/>
+                <Label Text="{Binding PlayerName3}" HorizontalOptions="Center" VerticalOptions="Center" Grid.Column="2" TextColor="White"/>
+            </Grid>
+
+            <ListView x:Name="listView1" 
+                          ItemsSource="{Binding Path=PointsRows}">
+
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Grid >
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="50"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Column="0" Text ="{Binding Points1}" HorizontalOptions="Center" VerticalOptions="Center" TextColor="White"/>
+                                <Label Grid.Column="1" Text ="{Binding Points2}" HorizontalOptions="Center" VerticalOptions="Center" TextColor="White"/>
+                                <Label Grid.Column="2" Text ="{Binding Points3}" HorizontalOptions="Center" VerticalOptions="Center" TextColor="White"/>
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+
+            </ListView>
+
+
+            <Button Text=">>" WidthRequest="100" IsVisible="{Binding ShowArrow}">
+
+                <Button.Behaviors>
+                    <behaviors:EventHandlerBehavior EventName="Clicked">
+                        <behaviors:InvokeMethodAction TargetObject="{Binding}" MethodName="OnBtGoClicked" />
+                    </behaviors:EventHandlerBehavior>
+                </Button.Behaviors>
+
+            </Button>
+
+        </StackLayout>
+
+    </ContentPage.Content>
+</ContentPage>

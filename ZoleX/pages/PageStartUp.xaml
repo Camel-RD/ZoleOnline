@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:i="clr-namespace:Behaviors;assembly=Behaviors"
+             xmlns:local="clr-namespace:ZoleX"
+             mc:Ignorable="d"
+             x:Class="ZoleX.PageStartUp"
+             BackgroundColor="{DynamicResource PageBackgroundColor}"
+             d:BindingContext="{Binding Source={x:Static local:Locator.StartUpPageVM}}">
+    
+    <ContentPage.Content>
+        <Grid>
+            <StackLayout VerticalOptions="Center">
+                
+                <FlexLayout Wrap="Wrap" 
+                            AlignItems="Center" 
+                            JustifyContent="Center">
+
+                    <StackLayout Margin="20">
+
+                        <Label Text="Tavs vārds:" Margin="0"/>
+                        <local:MyEntry WidthRequest="200" 
+                                   Text="{Binding PlayerName}"/>
+
+                    </StackLayout>
+
+                    <StackLayout WidthRequest="150"
+                             MinimumWidthRequest="150"
+                             Margin="20">
+
+                        <Button Text="Sākam spēli" 
+                        Margin="0,0,0,0">
+                            <Button.Behaviors>
+                                <i:EventHandlerBehavior EventName="Clicked">
+                                    <i:InvokeMethodAction TargetObject="{Binding}" MethodName="OnStarted" />
+                                </i:EventHandlerBehavior>
+                            </Button.Behaviors>
+                        </Button>
+
+                        <Button Text="Online spēle" 
+                        Margin="0,20,0,0" IsVisible="{Binding Path=ShowOnlineGame}">
+
+                            <Button.Behaviors>
+                                <i:EventHandlerBehavior EventName="Clicked">
+                                    <i:InvokeMethodAction TargetObject="{Binding}" MethodName="OnBtPlayOnlineClick" />
+                                </i:EventHandlerBehavior>
+                            </Button.Behaviors>
+                        </Button>
+
+                        <Button Text="Parametri" 
+                        Margin="0,20,0,0">
+                            <Button.Behaviors>
+                                <i:EventHandlerBehavior EventName="Clicked">
+                                    <i:InvokeMethodAction TargetObject="{Binding}" MethodName="OnBtSettingsClicked" />
+                                </i:EventHandlerBehavior>
+                            </Button.Behaviors>
+                        </Button>
+
+                    </StackLayout>
+
+                </FlexLayout>
+            </StackLayout>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

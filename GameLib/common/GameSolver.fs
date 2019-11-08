@@ -449,7 +449,7 @@ type GameSolver(cards : CardSet, cardsOnDesk : CardSet, goneCards : CardSet) =
                     yield list_last cards_Trump |> Some
                 yield x.StratLargerTrump(cardondeskmax)
                 yield x.StratTrump789King()
-                yield list_last cards_Trump |> Some
+                yield x.StratLargerTrumpThenAce()
             
             if cardondesk1.IsTrump && cards_Trump.Count = 0 then 
                 yield x.StratOneInKingOr9()

@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:i="clr-namespace:Behaviors;assembly=Behaviors"
+             xmlns:local="clr-namespace:ZoleX"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             BackgroundColor="{DynamicResource PageBackgroundColor}"
+             mc:Ignorable="d"
+             x:Class="ZoleX.PageCalendar"
+             d:BindingContext="{Binding Source={x:Static local:Locator.CalendarPageVM}}">
+    
+    <ContentPage.Content>
+        <StackLayout>
+            <Label Text="Plānojam, kad iespējams būsim serverī" 
+                   Margin="10" HorizontalOptions="CenterAndExpand"/>
+            
+            <ListView x:Name="listView1" 
+                          ItemsSource="{Binding Path=Items}">
+
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout Orientation="Horizontal">
+                                <Label Text ="{Binding Tag}" 
+                                       HorizontalOptions="Start" 
+                                       VerticalOptions="Center" 
+                                       WidthRequest="80"
+                                       TextColor="Moccasin"/>
+
+                                <Label Text ="{Binding TotalPoints}" 
+                                       HorizontalOptions="Start" 
+                                       VerticalOptions="Center" 
+                                       WidthRequest="50"
+                                       TextColor="White"/>
+
+                                <Button Text="-" 
+                                    HorizontalOptions="Center"
+                                    VerticalOptions="Center"
+                                    WidthRequest="40"
+                                    Margin="10,0,0,0">
+                                    <Button.Behaviors>
+                                        <i:EventHandlerBehavior EventName="Clicked">
+                                            <i:InvokeMethodAction TargetObject="{Binding}" MethodName="OnBtRemoveClicked" />
+                                        </i:EventHandlerBehavior>
+                                    </Button.Behaviors>
+                                </Button>
+
+                                <Label Text ="{Binding Points}" 
+                                       HorizontalOptions="Center" 
+                                       VerticalOptions="Center" 
+                                       HorizontalTextAlignment="Center"
+                                       WidthRequest="30"
+                                       TextColor="White"/>
+
+                                <Button Text="+" 
+                                    HorizontalOptions="Center"
+                                    VerticalOptions="Center"
+                                    WidthRequest="40"
+                                    Margin="10,0,0,0">
+                                    <Button.Behaviors>
+                                        <i:EventHandlerBehavior EventName="Clicked">
+                                            <i:InvokeMethodAction TargetObject="{Binding}" MethodName="OnBtAddClicked" />
+                                        </i:EventHandlerBehavior>
+                                    </Button.Behaviors>
+                                </Button>
+
+                                <Button Text="?" 
+                                    HorizontalOptions="Center"
+                                    VerticalOptions="Center"
+                                    WidthRequest="40"
+                                    Margin="10,0,0,0">
+                                    <Button.Behaviors>
+                                        <i:EventHandlerBehavior EventName="Clicked">
+                                            <i:InvokeMethodAction TargetObject="{Binding}" MethodName="OnGetUserListClick" />
+                                        </i:EventHandlerBehavior>
+                                    </Button.Behaviors>
+                                </Button>
+
+
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+
+            </ListView>
+
+            <StackLayout Orientation="Horizontal" VerticalOptions="End">
+                
+                <Button Text="Nosūtīt" 
+                    WidthRequest="120" 
+                    Margin="10"
+                    HorizontalOptions="Start">
+
+                    <Button.Behaviors>
+                        <i:EventHandlerBehavior EventName="Clicked">
+                            <i:InvokeMethodAction TargetObject="{Binding}" MethodName="OnBtSendDataClick" />
+                        </i:EventHandlerBehavior>
+                    </Button.Behaviors>
+
+                </Button>
+
+                <Button Text="Atpakaļ" 
+                    WidthRequest="120" 
+                    Margin="10"
+                    HorizontalOptions="Start">
+
+                    <Button.Behaviors>
+                        <i:EventHandlerBehavior EventName="Clicked">
+                            <i:InvokeMethodAction TargetObject="{Binding}" MethodName="OnBtBackClick" />
+                        </i:EventHandlerBehavior>
+                    </Button.Behaviors>
+
+                </Button>
+                
+            </StackLayout>
+
+        </StackLayout>
+
+    </ContentPage.Content>
+</ContentPage>

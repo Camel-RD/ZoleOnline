@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:i="clr-namespace:Behaviors;assembly=Behaviors"
+             xmlns:local="clr-namespace:ZoleX"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             BackgroundColor="{DynamicResource PageBackgroundColor}"
+             x:Class="ZoleX.PagePlayerList"
+             d:BindingContext="{Binding Source={x:Static local:Locator.LobbyPageVM}}">
+    
+    <ContentPage.Content>
+        <StackLayout>
+            <Grid Margin="0,0,0,0"
+                      BackgroundColor="#404040">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*"></ColumnDefinition>
+                    <ColumnDefinition Width="2*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <Label Text="vārds" HorizontalOptions="Center" VerticalOptions="Center" Grid.Column="0" TextColor="Moccasin"/>
+                <Label Text="punkti / spēles" HorizontalOptions="Center" VerticalOptions="Center" Grid.Column="1" TextColor="Moccasin"/>
+            </Grid>
+
+            <ListView x:Name="listView1" 
+                          ItemsSource="{Binding Path=PlayersOnline}">
+
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Grid >
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="50"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="3*"/>
+                                    <ColumnDefinition Width="2*"/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Column="0" Text ="{Binding Name}" HorizontalOptions="Start" VerticalOptions="Center" TextColor="White"/>
+                                <Label Grid.Column="1" Text ="{Binding ExtraInfo}" HorizontalOptions="Center" VerticalOptions="Center" TextColor="White"/>
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+
+            </ListView>
+
+            <Button Text="Atpakaļ" 
+                    WidthRequest="120" 
+                    Margin="10"
+                    VerticalOptions="End" 
+                    HorizontalOptions="Start">
+
+                <Button.Behaviors>
+                    <i:EventHandlerBehavior EventName="Clicked">
+                        <i:InvokeMethodAction TargetObject="{Binding}" MethodName="OnBtBackFromListClicked" />
+                    </i:EventHandlerBehavior>
+                </Button.Behaviors>
+
+            </Button>
+
+
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

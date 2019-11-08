@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:i="clr-namespace:Behaviors;assembly=Behaviors"
+             xmlns:local="clr-namespace:ZoleX"
+             mc:Ignorable="d"
+             BackgroundColor="{DynamicResource PageBackgroundColor}"
+             x:Class="ZoleX.PageWait"
+             d:BindingContext="{Binding Source={x:Static local:Locator.WaititngPageVM}}">
+    
+    <ContentPage.Content>
+        <StackLayout>
+            <Label Text="{Binding Message}"
+                   Margin="50"
+                   LineBreakMode="WordWrap"
+                   VerticalOptions="CenterAndExpand" 
+                   HorizontalOptions="CenterAndExpand" 
+                   d:Text="Uzgaidi ..."/>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

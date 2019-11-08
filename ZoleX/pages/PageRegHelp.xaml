@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:i="clr-namespace:Behaviors;assembly=Behaviors"
+             xmlns:local="clr-namespace:ZoleX"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             BackgroundColor="{DynamicResource PageBackgroundColor}"
+             x:Class="ZoleX.PageRegHelp"
+             d:BindingContext="{Binding Source={x:Static local:StartUpPageVM.ST}}">
+
+    <ContentPage.Content>
+
+        <Grid Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+
+            <Label Text="Par reģistrēšanos:" 
+                   TextDecorations="Underline" 
+                   HorizontalOptions="Center"
+                   TextColor="Moccasin"
+                   Margin="10"/>
+
+            <ScrollView Grid.Row="1">
+                <StackLayout>
+                    <Label LineBreakMode="WordWrap">
+                        Serverī var spēlēt arī bez reģistrēšanās, speižot pogu Ieiet kā viesis. Parole tad nav jānorāda. Kā viesis serverī nevar ieiet, ja norādītais lietotāja vārds jau ir piereģistrēts vai cits spēlētājs jau ir iegājis serverī ar šo vārdu. Izejot no servera iegūtie punkti netiks saglabāti.
+                    </Label>
+                    <Label LineBreakMode="WordWrap" Margin="0,10,0,0" >
+                        Serverī var piereģistrēties, reģistrāciju apstiprinot ar kodu, kas tiek nosūtīts uz norādīto e-pasta adresi. Jāsāk ar reģistrācijas koda pieprasīšanu, norādot lietotāja vārdu, paroli un e-pasta adresi. Pec koda saņemšanas reģistrāciju var turpināt, norādot vārdu, paroli un saņemto kodu.
+                    </Label>
+                    <Label LineBreakMode="WordWrap" Margin="0,10,0,0">
+                        Reģistrētam lietotājam saglabājas dati par iegūtajiem punktiem un izspēlēto spēļu skaitu.
+                    </Label>
+
+                </StackLayout>
+            </ScrollView>
+
+            <Button Text="Atpakaļ" 
+                    WidthRequest="120"
+                    Grid.Row="2"
+                    Margin="20"
+                    HorizontalOptions="Start">
+                <Button.Behaviors>
+                    <i:EventHandlerBehavior EventName="Clicked">
+                        <i:InvokeMethodAction TargetObject="{Binding}" MethodName="OnCloseHelpClick" />
+                    </i:EventHandlerBehavior>
+                </Button.Behaviors>
+            </Button>
+
+        </Grid>
+
+    </ContentPage.Content>
+</ContentPage>

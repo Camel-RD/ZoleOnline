@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:i="clr-namespace:Behaviors;assembly=Behaviors"
+             xmlns:local="clr-namespace:ZoleX"
+             BackgroundColor="{DynamicResource PageBackgroundColor}"
+             mc:Ignorable="d"
+             x:Class="ZoleX.PageLobby"
+             d:BindingContext="{Binding Source={x:Static local:Locator.LobbyPageVM}}">
+
+    <ContentPage.Content>
+        <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
+
+            <FlexLayout Wrap="Wrap" 
+                        AlignItems="Center" 
+                        JustifyContent="Center">
+
+                <StackLayout Margin="20">
+
+                    <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand" Margin="20">
+                        <Label Text="Spēlētāju skaits serverī: "/>
+                        <Label Text="{Binding PlayerOnlineCount}" d:Text="12"/>
+                    </StackLayout>
+
+                    <Button Text="Spēlētāju saraksts" 
+                            HorizontalOptions="Center"
+                            WidthRequest="200"
+                            Margin="0,20,0,0">
+                        <Button.Behaviors>
+                            <i:EventHandlerBehavior EventName="Clicked">
+                                <i:InvokeMethodAction TargetObject="{Binding}" MethodName="OnBtListPlayersClicked" />
+                            </i:EventHandlerBehavior>
+                        </Button.Behaviors>
+                    </Button>
+
+                </StackLayout>
+
+
+                <StackLayout Margin="20"
+                             WidthRequest="200">
+
+                    <Button Text="Jauna spēle" 
+                        Margin="0,20,0,0">
+                        <Button.Behaviors>
+                            <i:EventHandlerBehavior EventName="Clicked">
+                                <i:InvokeMethodAction TargetObject="{Binding}" MethodName="OnBtJoinGameClick" />
+                            </i:EventHandlerBehavior>
+                        </Button.Behaviors>
+                    </Button>
+
+                    <Button Text="Privāta spēle" 
+                        Margin="0,20,0,0">
+                        <Button.Behaviors>
+                            <i:EventHandlerBehavior EventName="Clicked">
+                                <i:InvokeMethodAction TargetObject="{Binding}" MethodName="OnBtJoinPrivateGameClicked" />
+                            </i:EventHandlerBehavior>
+                        </Button.Behaviors>
+                    </Button>
+
+                    <Button Text="Plānotājs" 
+                        Margin="0,20,0,0">
+                        <Button.Behaviors>
+                            <i:EventHandlerBehavior EventName="Clicked">
+                                <i:InvokeMethodAction TargetObject="{Binding}" MethodName="OnBtCalendarClicked" />
+                            </i:EventHandlerBehavior>
+                        </Button.Behaviors>
+                    </Button>
+
+                    <Button Text="Iziet" 
+                        Margin="0,20,0,0">
+                        <Button.Behaviors>
+                            <i:EventHandlerBehavior EventName="Clicked">
+                                <i:InvokeMethodAction TargetObject="{Binding}" MethodName="OnBtExitClick" />
+                            </i:EventHandlerBehavior>
+                        </Button.Behaviors>
+                    </Button>
+                </StackLayout>
+            
+            </FlexLayout>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

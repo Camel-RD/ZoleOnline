@@ -563,30 +563,11 @@ namespace ZoleW
             CardClicked?.Invoke(this, new IntEventArgs(e.EventData));
         }
 
-        public void OnBtGoClicked(object sender, EventArgs e)
-        {
-            BtGoClicked?.Invoke(this, e);
-        }
-
-        public void OnYesClick()
-        {
-            YesNoZoleClick?.Invoke(this, new StringEventArgs("Jā"));
-        }
-
-        public void OnNoClick()
-        {
-            YesNoZoleClick?.Invoke(this, new StringEventArgs("Nē"));
-        }
-
-        public void OnZoleClick()
-        {
-            YesNoZoleClick?.Invoke(this, new StringEventArgs("Zole"));
-        }
-
-        public void OnDebugModeChanged()
-        {
-            DebugModeChanged?.Invoke(this, new EventArgs());
-        }
+        public void OnBtGoClicked() => BtGoClicked?.Invoke(this, new EventArgs());
+        public void OnYesClick() => YesNoZoleClick?.Invoke(this, new StringEventArgs("Jā"));
+        public void OnNoClick() => YesNoZoleClick?.Invoke(this, new StringEventArgs("Nē"));
+        public void OnZoleClick() => YesNoZoleClick?.Invoke(this, new StringEventArgs("Zole"));
+        public void OnDebugModeChanged() => DebugModeChanged?.Invoke(this, new EventArgs());
 
         public event EventHandler<IntEventArgs> CardClicked;
         public event EventHandler<StringEventArgs> YesNoZoleClick;
@@ -1081,17 +1062,17 @@ namespace ZoleW
 
         public int UsedPoints { get; set; } = 0;
 
-        private CalendarPageVM _St = null;
-        public CalendarPageVM St
+        private static CalendarPageVM _ST = null;
+        public static CalendarPageVM ST
         {
             get
             {
-                if (_St == null)
+                if (_ST == null)
                 {
-                    _St = new CalendarPageVM();
-                    _St.MockData();
+                    _ST = new CalendarPageVM();
+                    _ST.MockData();
                 }
-                return _St;
+                return _ST;
             }
         }
 

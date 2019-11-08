@@ -540,14 +540,14 @@ type AppServer(port, datafolder, addhours, emailserveraddr, emailserverport,
             Logger.WriteLine "LogInUser: GetCalendarData - user not in lobby"
             state
         else 
-        if onlineuser.OnlineUserType <> OnlineUserType.Registered then 
-            replych.Reply ""
-            Logger.WriteLine "LogInUser: GetCalendarData - user not registered"
-            state
-        else 
         let user = onlineuser.User
-        let data = ServerCalendar.GetUserCalendar(RealDate(), user.Id)
-        replych.Reply data
+        if onlineuser.UserData.IsSome && onlineuser.OnlineUserType = OnlineUserType.Registered then
+            let userdata = onlineuser.UserData.Value
+            let data = ServerCalendar.GetUserCalendar(RealDate(), userdata.Id)
+            replych.Reply data
+        else
+            let data = ServerCalendar.GetUserCalendar(RealDate(), -1)
+            replych.Reply data
         Logger.WriteLine("AppServer: GetCalendarData: userid: {0} name: {1}", user.Id, user.Name)
         state
 
@@ -567,8 +567,12 @@ type AppServer(port, datafolder, addhours, emailserveraddr, emailserverport,
             state
         else 
         let user = onlineuser.User
-        let data = ServerCalendar.GetUserNamesFotTag(RealDate(), tag)
-        replych.Reply data
+        if onlineuser.UserData.IsSome then
+            let data = ServerCalendar.GetUserNamesFotTag(RealDate(), tag)
+            replych.Reply data
+        else
+            let data = ServerCalendar.GetUserNamesFotTag(RealDate(), tag)
+            replych.Reply data
         Logger.WriteLine("AppServer: GetCalendarTagData: userid: {0} name: {1}", user.Id, user.Name)
         state
 
@@ -583,8 +587,14 @@ type AppServer(port, datafolder, addhours, emailserveraddr, emailserverport,
             Logger.WriteLine "LogInUser: SetCalendarData - user not in lobby"
             state
         else 
+        if onlineuser.OnlineUserType <> OnlineUserType.Registered then 
+            Logger.WriteLine "LogInUser: SetCalendarData - user not registered"
+            state
+        else
         let user = onlineuser.User
-        ServerCalendar.UpdateUserCalendar(RealDate(), user.Id, user.Name, data)
+        if onlineuser.UserData.IsSome then
+            let userdata = onlineuser.UserData.Value
+            ServerCalendar.UpdateUserCalendar(RealDate(), userdata.Id, userdata.Name, data)
         Logger.WriteLine("AppServer: SetCalendarData: userid: {0} name: {1}", user.Id, user.Name)
         state
 
