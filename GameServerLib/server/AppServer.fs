@@ -7,6 +7,7 @@ open GameLib
 open System.IO
 open System.Reflection
 open System.Net.Mail
+open System.Text.RegularExpressions
 
 type ServerStatus = |Offline |Started |Closed
 
@@ -80,19 +81,16 @@ type AppServer(port, datafolder, addhours, emailserveraddr, emailserverport,
             |>Path.GetDirectoryName
             |>DirectoryInfo
         let mydirinfo =
-            if mydirinfo.Name = "Debug" || mydirinfo.Name = "Release" then
+            if ["Debug"; "Release"; "netcoreapp3.0"] |> List.contains mydirinfo.Name then
                 mydirinfo.Parent.Parent
             else mydirinfo
         let mydir = mydirinfo.FullName    
         Path.Combine(mydir,"Data")
     
-    let IsGoodName (name : string) =
-        name <> "" && 
-        name.Length < 16 &&
-        not (name.Contains ":") &&
-        not (name.Contains "!") &&
-        not (name.Contains ";") &&
-        not (name.Contains "|")
+    let rex_email = new Regex(@"([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})")
+    let rex_username = new Regex("^[\w+]+([-_ ]?[\w+])*$")
+    let IsGoodName (name : string) = rex_username.IsMatch(name)
+    let IsGoodEmail (email : string) = rex_email.IsMatch(email)
 
     static member AddHours = _AddHours
 
@@ -134,6 +132,8 @@ type AppServer(port, datafolder, addhours, emailserveraddr, emailserverport,
             with _-> ()}
         Async.Start(task_async)
 
+    member x.AddRegUser (name : string, psw : string) =
+        AppUserData.AddRegUser (name, psw) |> Async.RunSynchronously
 
     member private x.AddNewConnection (state : ServerState) (connection : ServerConnection) =
         let new_user = new User(_FromUser, connection)
@@ -182,6 +182,11 @@ type AppServer(port, datafolder, addhours, emailserveraddr, emailserverport,
             Logger.WriteLine "AppServer: GetRegCode - bad username"
             return state
         else 
+        if not (IsGoodEmail email) then 
+            replych.Reply (NewOrLoginUserReply.Failed("Tāda e-pasta adrese nederēs"))
+            Logger.WriteLine "AppServer: GetRegCode - bad email"
+            return state
+        else 
         let onlineuser = OUDById userid
         if onlineuser.IsNone then 
             replych.Reply (NewOrLoginUserReply.Failed("Lietotājs nav pieslēdzies"))
@@ -227,8 +232,6 @@ type AppServer(port, datafolder, addhours, emailserveraddr, emailserverport,
                 ud.Email <- email
                 ud
 
-        onlineuser.UserData <- Some userdata
-
         if userdata.RegStatus = UserRegStatus.Registered then
             replych.Reply (NewOrLoginUserReply.Failed("Lietotājs ar šādu vārdu jau ir reģistrējies"))
             Logger.WriteLine("AppServer: GetRegCode: user allready Registered {0}", name)
@@ -262,10 +265,18 @@ type AppServer(port, datafolder, addhours, emailserveraddr, emailserverport,
             Logger.WriteLine("AppServer: GetRegCode: used email {0}", name)
             return state
         else 
+
+        onlineuser.UserData <- Some userdata
+
         userdata.RegStatus <- UserRegStatus.RegCodeSent
         userdata.RegCode <- rnd.Next(10000, 100000).ToString()
         userdata.GetRegCodeRequestCount <- 0
-        let! q = AppUserData.SetUserDataUpdated userdata
+
+        let! q = 
+            if userdata.Id = -1 then
+                AppUserData.AddNew userdata
+            else
+                AppUserData.SetUserDataUpdated userdata
         AppUserData.SetUserDataOriginal userdata
         let user = onlineuser.User
         user.SetUserData (user.Id, name, psw)

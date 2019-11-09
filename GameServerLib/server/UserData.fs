@@ -94,21 +94,26 @@ type UserDataRepository() =
             finally DbConn <- None
     }
 
-    member x.AddNew (name, psw, email) = async{
-        if DbConn.IsNone then
-            return None
-        else
-        let db = DbConn.Value
+    member x.AddRegUser (name : string, psw : string) =
         let ud = UserData()
         ud.Name <- name
         ud.Psw <- psw
-        ud.Email <- email
+        ud.RegistrationsDate <- Nullable(DateTime.Today)
+        ud.RegStatus <- UserRegStatus.Registered
+        x.AddNew ud
+
+    member x.AddNew (ud : UserData) = async{
+        if DbConn.IsNone then
+            return false
+        else
+        let db = DbConn.Value
+        ud.Id <- 0
         let task_insert = db.InsertAsync(ud) |> Async.AwaitTask
         let! ret = Async.Catch (task_insert)
         match ret with
-        |Choice1Of2 ret when ret = 1 -> return Some ud
-        |Choice1Of2 _ -> return None
-        |Choice2Of2 (exc : Exception) -> return None 
+        |Choice1Of2 ret when ret = 1 -> return true
+        |Choice1Of2 _ -> return false
+        |Choice2Of2 (exc : Exception) -> return false
     }
 
     member x.GetUserFromDB (userid : int) = async{
@@ -159,7 +164,7 @@ type UserDataRepository() =
 
     member x.SetUserDataOriginal(ud : UserData) =
         if ud.Id > -1  && not (LoadedUserData.ContainsKey ud.Id) then
-            LoadedUserData.[ud.Id] = ud.Copy() |> ignore
+            LoadedUserData.Add (ud.Id, ud.Copy()) |> ignore
         
     member x.SetUserDataUpdated (ud : UserData) = async{
         if DbConn.IsNone then
@@ -180,7 +185,7 @@ type UserDataRepository() =
         |Choice2Of2 (exc : Exception) -> return false
     }
 
-    
+  
 type OnlineUserDataRepository() =
     let idgenerator = IdGenerator(1)
     let data : Dictionary<int, UserData> = Dictionary<int, UserData>()

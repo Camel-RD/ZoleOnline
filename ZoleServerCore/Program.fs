@@ -6,6 +6,8 @@ open System.Net.Mail
 
 let PrintMenu() =
     printfn "1. Start server"
+    printfn "2. Test mail"
+    printfn "3. Add user"
     printfn "x. Stop server"
 
 let SendMail (addr:string) from =
@@ -21,16 +23,17 @@ let SendMail (addr:string) from =
 
 [<EntryPoint>]
 let main argv =
-    if argv.Length <> 7 then 
-        printfn "Missing arguments"
-        0
-    else
+    let argv = 
+        if argv.Length <> 7 then 
+            printfn "Missing arguments, using default"
+            [|"7777";"0"; "0"; ""; ""; ""; ""|]
+        else argv
     let port = int argv.[0]
     let datafolder = argv.[1]
     let datafolder = if datafolder = "0" then "" else datafolder
     let addhours = int argv.[2]
     let emailserveraddr = argv.[3]
-    let emailserverport = int argv.[4]
+    let emailserverport = if argv.[4] = "" then 25 else int argv.[4]
     let emailfrom = argv.[5]
     let emailfromname = argv.[6]
 
@@ -56,6 +59,15 @@ let main argv =
             printf "\nfrom:"
             let from = Console.ReadLine()
             SendMail addr from
+            loop()
+        |"3" -> 
+            printf "\nName:"
+            let name = Console.ReadLine()
+            printf "\nPsw:"
+            let psw = Console.ReadLine()
+            if name <> "" && psw <> "" then
+                let q = server.AddRegUser (name, psw)
+                printf "Done:%A" q
             loop()
         |_->
             PrintMenu()
