@@ -524,7 +524,7 @@ type AppClient(gameform) as this =
         let! msg = statevar.Reader cur_state -1
         match msg with
         |MsgToClient.FromClientUI (MsgUIToClient.PlayOffline name) -> 
-            x.StartLocalGame cur_state.Name
+            x.StartLocalGame name
             let cur_state = 
                 {cur_state with 
                     Status = AppClientStatus.OfflineGame; 

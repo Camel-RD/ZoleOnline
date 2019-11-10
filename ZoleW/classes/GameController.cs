@@ -163,7 +163,8 @@ namespace ZoleW
             GamePageVM.DebugModeChanged += Game_DebugModeChanged;
             
             PointsPageVM.BtGoClicked += Game_BtGoClicked;
-
+            PointsPageVM.BtYesClicked += PointsPageVM_BtYesClicked;
+            PointsPageVM.BtNoClicked += PointsPageVM_BtNoClicked;
 
             GamePageVM.IsInDegugMode = false;
 
@@ -522,6 +523,30 @@ namespace ZoleW
             DoOnGO();
         }
 
+        private void PointsPageVM_BtYesClicked(object sender, EventArgs e)
+        {
+            if (state == EState.startGame)
+            {
+                state = EState.none;
+                PointsPageVM.ShowYesNo = false;
+                ToGame.ReplyStartNewGame(true);
+                MainWindow.Content = GamePage;
+                return;
+            }
+            throw new Exception("wrong state");
+        }
+
+        private void PointsPageVM_BtNoClicked(object sender, EventArgs e)
+        {
+            if (state == EState.startGame)
+            {
+                state = EState.none;
+                PointsPageVM.ShowYesNo = false;
+                ToGame.ReplyStartNewGame(false);
+                return;
+            }
+            throw new Exception("wrong state");
+        }
 
         public void SetMyPlayerNr(int nr)
         {
@@ -537,24 +562,7 @@ namespace ZoleW
         {
             AppClient.InitAppClient();
         }
-        /* ------  Android
-        public void WriteToRegistry(string name, bool showarrow)
-        {
-            App.Properties["Name"] = name;
-            App.Properties["ShowArrow"] = showarrow ? "Yes" : "No";
-            App.SavePropertiesAsync();
-        }
 
-        public void ReadFromRegistry(out string name, out bool showarrow)
-        {
-            name = "Es";
-            showarrow = true;
-            if (App.Properties.ContainsKey("Name")) 
-                name = (string)App.Properties["Name"];
-            if (App.Properties.ContainsKey("ShowArrow"))
-                showarrow = (string)App.Properties["ShowArrow"] == "Yes";
-        }
-        */
 
         public void WriteToRegistry()
         {
@@ -642,7 +650,7 @@ namespace ZoleW
             if (GamePageVM.IsInDegugMode)
             {
                 GamePageVM.IsButtonGoVisible = true;
-                PointsPageVM.ShowArrow = true;
+                PointsPageVM.ShowArrow = false;
             }
             else
             {
@@ -660,14 +668,10 @@ namespace ZoleW
 
         public void AskStartGame()
         {
-            ShowStats(false);
-            ShowPoints(-1);
-            ShowNameLabels(false);
-            ShowText("Vai sāksim jaunu spēli");
             state = EState.startGame;
             GamePageVM.IsButtonGoVisible = false;
-            GamePageVM.IsYesNoPanelVisible = true;
-            GamePageVM.IsButtonZoleVisible = false;
+            PointsPageVM.ShowArrow = false;
+            PointsPageVM.ShowYesNo = true;
         }
 
         public void DoStartGame()
@@ -678,6 +682,7 @@ namespace ZoleW
             GamePageVM.IsButtonGoVisible = false;
             GamePageVM.IsYesNoPanelVisible = false;
             GamePageVM.IsButtonZoleVisible = false;
+            PointsPageVM.ShowYesNo = false;
             ShowText("");
         }
 
@@ -1013,7 +1018,9 @@ namespace ZoleW
         {
             if (b)
             {
-                PointsPageVM.ShowArrow = ShowArrow;
+                //PointsPageVM.ShowArrow = ShowArrow;
+                PointsPageVM.ShowArrow = false;
+                PointsPageVM.ShowYesNo = false;
                 MainWindow.Content = PagePoints;
             }
             else

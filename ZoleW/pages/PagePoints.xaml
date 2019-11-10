@@ -31,6 +31,17 @@
                TargetType="{x:Type DataGridColumnHeader}">
                 <Setter Property="Controls:ControlsHelper.ContentCharacterCasing" Value="Normal"/>
             </Style>
+            <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
+                <Setter Property="FontSize" Value="20"/>
+                <Setter Property="FontFamily" Value="Microsoft Sans Serif"/>
+                <Setter Property="Controls:ButtonHelper.PreserveTextCase" Value="True"/>
+                <Setter Property="Padding" Value="8,5,8,5"/>
+            </Style>
+            <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="FontSize" Value="18"/>
+            </Style>
+
         </ResourceDictionary>
     </Page.Resources>
 
@@ -87,6 +98,38 @@
                 </i:DataTrigger>
             </i:Interaction.Triggers>
         </Button>
-        
+
+        <StackPanel Canvas.Left="450" Canvas.Top="100">
+            <i:Interaction.Triggers>
+                <i:DataTrigger Binding="{Binding ShowYesNo}" Value="True">
+                    <i:ChangePropertyAction PropertyName="Visibility" Value="Visible"/>
+                </i:DataTrigger>
+                <i:DataTrigger Binding="{Binding ShowYesNo}" Value="False">
+                    <i:ChangePropertyAction PropertyName="Visibility" Value="Collapsed"/>
+                </i:DataTrigger>
+            </i:Interaction.Triggers>
+
+            <TextBlock FontSize="18" Margin="10">
+                Vai sāksim jaunu spēli?
+            </TextBlock>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button x:Name="btYes" Content="Jā" Margin="10">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <i:CallMethodAction  TargetObject="{Binding}" MethodName="OnBtYesClicked" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+
+                <Button x:Name="btNo" Content="Nē" Margin="10">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <i:CallMethodAction  TargetObject="{Binding}" MethodName="OnBtNoClicked" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+            </StackPanel>
+        </StackPanel>
+
     </Canvas>
 </Page>

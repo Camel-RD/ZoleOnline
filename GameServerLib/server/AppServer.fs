@@ -40,7 +40,7 @@ type AppServer(port, datafolder, addhours, emailserveraddr, emailserverport,
 
     let AppUserData = UserDataRepository()
     let AppOnlineUserData = Dictionary<int,OnlineUserData>()
-    let TagList = [|"16:00";"17:00";"18:00";"19:00";"20:00";"21:00";"22:00";"23:00";"24:00"|]
+    let TagList = [|"17:00";"18:00";"19:00";"20:00";"21:00";"22:00";"23:00";"24:00"|]
     let ServerCalendar = ServerCalendar(TagList)
 
     let ftakemsgfromlistener (msg : MsgListenerToServer) =
@@ -89,8 +89,16 @@ type AppServer(port, datafolder, addhours, emailserveraddr, emailserverport,
     
     let rex_email = new Regex(@"([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})")
     let rex_username = new Regex("^[\w+]+([-_ ]?[\w+])*$")
-    let IsGoodName (name : string) = rex_username.IsMatch(name)
-    let IsGoodEmail (email : string) = rex_email.IsMatch(email)
+    
+    let IsGoodName (name : string) = 
+        (not (isNull(name))) && 
+        name.Length < 16 &&
+        rex_username.IsMatch(name)
+    
+    let IsGoodEmail (email : string) = 
+        (not (isNull(email))) && 
+        email.Length < 50 &&
+        rex_email.IsMatch(email)
 
     static member AddHours = _AddHours
 
@@ -108,7 +116,7 @@ type AppServer(port, datafolder, addhours, emailserveraddr, emailserverport,
     member x.Stop() = async{
         for oud in AppOnlineUserData.Values do
             if oud.UserData.IsSome then
-                let! q = AppUserData.SetUserDataUpdated oud.UserData.Value
+                let! q = AppUserData.SetUserDataUpdated oud.UserData.Value true
                 ()
         x.Dispose()
         do! Async.Sleep(2000)
@@ -164,7 +172,7 @@ type AppServer(port, datafolder, addhours, emailserveraddr, emailserverport,
         let! q = 
             if onlineuser.UserData.IsSome && 
                     onlineuser.OnlineUserType = OnlineUserType.Registered then
-                AppUserData.SetUserDataUpdated(onlineuser.UserData.Value)
+                AppUserData.SetUserDataUpdated onlineuser.UserData.Value true
             else async{return true}
         onlineuser.UserData <- None
         AppOnlineUserData.Remove userid |> ignore
@@ -276,7 +284,7 @@ type AppServer(port, datafolder, addhours, emailserveraddr, emailserverport,
             if userdata.Id = -1 then
                 AppUserData.AddNew userdata
             else
-                AppUserData.SetUserDataUpdated userdata
+                AppUserData.SetUserDataUpdated userdata false
         AppUserData.SetUserDataOriginal userdata
         let user = onlineuser.User
         user.SetUserData (user.Id, name, psw)
@@ -366,7 +374,7 @@ type AppServer(port, datafolder, addhours, emailserveraddr, emailserverport,
         user.SetUserData (user.Id, name, psw)
         user.SetPoints (userdata.Points, userdata.GamesPlayed)
         onlineuser.Location <- UserLocation.OnWay
-        let! q = AppUserData.SetUserDataUpdated userdata
+        let! q = AppUserData.SetUserDataUpdated userdata false
         AppUserData.SetUserDataOriginal userdata
         replych.Reply (NewOrLoginUserReply.OK user.Id)
         Lobby.To.EnterServer user

@@ -163,17 +163,23 @@ type UserDataRepository() =
     }
 
     member x.SetUserDataOriginal(ud : UserData) =
-        if ud.Id > -1  && not (LoadedUserData.ContainsKey ud.Id) then
-            LoadedUserData.Add (ud.Id, ud.Copy()) |> ignore
+        if ud.Id > -1  then 
+            if LoadedUserData.ContainsKey ud.Id then
+                LoadedUserData.[ud.Id] <- ud.Copy()
+            else 
+                LoadedUserData.Add (ud.Id, ud.Copy()) |> ignore
         
-    member x.SetUserDataUpdated (ud : UserData) = async{
-        if DbConn.IsNone then
+    member x.SetUserDataUpdated (ud : UserData) (userclosed : bool) = async{
+        if DbConn.IsNone || ud.Id = -1 then
             return false
         else
         let db = DbConn.Value
         let bok, oud = LoadedUserData.TryGetValue(ud.Id)
-        if bok then
-            LoadedUserData.Remove ud.Id |> ignore
+        match bok, userclosed with
+        |true, true -> LoadedUserData.Remove ud.Id |> ignore
+        |true, false -> LoadedUserData.[ud.Id] <- ud
+        |false, false -> LoadedUserData.Add (ud.Id, ud)
+        |false, true -> ()
         if bok && oud.Equals(ud) then
             return true
         else

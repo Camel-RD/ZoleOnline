@@ -154,6 +154,8 @@ namespace ZoleX
             GamePageVM.DebugModeChanged += Game_DebugModeChanged;
 
             PointsPageVM.BtGoClicked += Game_BtGoClicked;
+            PointsPageVM.BtYesClicked += PointsPageVM_BtYesClicked;
+            PointsPageVM.BtNoClicked += PointsPageVM_BtNoClicked;
 
             GamePageVM.IsInDegugMode = false;
 
@@ -520,6 +522,30 @@ namespace ZoleX
             DoOnGO();
         }
 
+        private void PointsPageVM_BtYesClicked(object sender, EventArgs e)
+        {
+            if (state == EState.startGame)
+            {
+                state = EState.none;
+                PointsPageVM.ShowYesNo = false;
+                App.MainPage = GamePage;
+                ToGame.ReplyStartNewGame(true);
+                return;
+            }
+            throw new Exception("wrong state");
+        }
+
+        private void PointsPageVM_BtNoClicked(object sender, EventArgs e)
+        {
+            if (state == EState.startGame)
+            {
+                state = EState.none;
+                PointsPageVM.ShowYesNo = false;
+                ToGame.ReplyStartNewGame(false);
+                return;
+            }
+            throw new Exception("wrong state");
+        }
 
         public void SetMyPlayerNr(int nr)
         {
@@ -631,11 +657,12 @@ namespace ZoleX
             if (GamePageVM.IsInDegugMode)
             {
                 GamePageVM.IsButtonGoVisible = true;
-                PointsPageVM.ShowArrow = true;
+                PointsPageVM.ShowArrow = false;
             }
             else
             {
                 GamePageVM.IsButtonGoVisible = false;
+                PointsPageVM.ShowArrow = false;
                 Task.Run(async () =>
                 {
                     int t = IsOnlineGame ? 1200 : 2000;
@@ -647,14 +674,11 @@ namespace ZoleX
 
         public void AskStartGame()
         {
-            ShowStats(false);
-            ShowPoints(-1);
-            ShowNameLabels(false);
             ShowText("Vai sāksim jaunu spēli");
             state = EState.startGame;
             GamePageVM.IsButtonGoVisible = false;
-            GamePageVM.IsYesNoPanelVisible = true;
-            GamePageVM.IsButtonZoleVisible = false;
+            PointsPageVM.ShowArrow = false;
+            PointsPageVM.ShowYesNo = true;
         }
 
         public void DoStartGame()
@@ -665,6 +689,7 @@ namespace ZoleX
             GamePageVM.IsButtonGoVisible = false;
             GamePageVM.IsYesNoPanelVisible = false;
             GamePageVM.IsButtonZoleVisible = false;
+            PointsPageVM.ShowYesNo = false;
             ShowText("");
         }
 
@@ -1008,7 +1033,9 @@ namespace ZoleX
         {
             if (b)
             {
-                PointsPageVM.ShowArrow = ShowArrow;
+                //PointsPageVM.ShowArrow = ShowArrow;
+                PointsPageVM.ShowArrow = false;
+                PointsPageVM.ShowYesNo = false;
                 App.MainPage = PagePoints;
             }
             else

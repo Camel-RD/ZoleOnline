@@ -4,7 +4,7 @@ open System.Collections.Generic
 open System.Diagnostics
 
 type AppData() =
-    static member val Greeting = "ZoleV02"
+    static member val Greeting = "ZoleV03"
 
 type StateVarFlag = |OK |Return |Failed of msg : string
 

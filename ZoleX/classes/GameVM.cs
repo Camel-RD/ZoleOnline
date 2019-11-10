@@ -215,6 +215,7 @@ namespace ZoleX
         private string _PlayerName1 = "", _PlayerName2 = "", _PlayerName3 = "";
         private PointsRow _LastItem = null;
         private bool _ShowArrow = true;
+        private bool _ShowYesNo = false;
 
         public void AddPoints(int pt1, int pt2, int pt3)
         {
@@ -313,6 +314,17 @@ namespace ZoleX
             }
         }
 
+        public bool ShowYesNo
+        {
+            get { return _ShowYesNo; }
+            set
+            {
+                if (_ShowYesNo == value) return;
+                _ShowYesNo = value;
+                OnPropertyChanged("ShowYesNo");
+            }
+        }
+
         public PointsRow LastItem 
         {
             get { return _LastItem; }
@@ -325,8 +337,12 @@ namespace ZoleX
         }
 
         public void OnBtGoClicked() => BtGoClicked?.Invoke(this, new EventArgs());
+        public void OnBtYesClicked() => BtYesClicked?.Invoke(this, new EventArgs());
+        public void OnBtNoClicked() => BtNoClicked?.Invoke(this, new EventArgs());
 
         public event EventHandler BtGoClicked;
+        public event EventHandler BtYesClicked;
+        public event EventHandler BtNoClicked;
     }
 
     public class GamePageVM : ViewModel

@@ -521,6 +521,7 @@ type User(toServer, serverconnection) as this =
     member x.Dispose() =
         if not x.IsDisposed then
             try ServerConnection.Close() with _ -> ()
+            try ToServer.UserClosed x.Id with _ -> ()
             try (MailBox :> IDisposable).Dispose() 
             finally x._IsDisposed <- true
 

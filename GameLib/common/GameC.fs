@@ -12,6 +12,8 @@ type GameStateC = {
     cycleMoveNr : int
     firstPlayer : int
     firstPlayerX : int
+    gameCount : int
+    roundWinsForBig : int
     playerPoints : ImmutableArray<int>
     activePlayerNr : int
     bigPlayerNr : int
@@ -27,6 +29,8 @@ type GameStateC = {
         cycleMoveNr = 0;
         firstPlayer = 0;
         firstPlayerX = 0;
+        gameCount = 0;
+        roundWinsForBig = 0;
         playerPoints = ImmutableArray.Create(0, 0, 0);
         activePlayerNr = -1;
         bigPlayerNr = -1;
@@ -59,7 +63,11 @@ type GameStateC = {
                     then points
                     else 0
                 yield x.playerPoints.[i] + p]
-        {x with playerPoints = pts.ToImmutableArray()}
+        let roundwinsforbig = 
+            if x.bigPlayerNr = winner 
+            then x.roundWinsForBig + 1 
+            else x.roundWinsForBig
+        {x with playerPoints = pts.ToImmutableArray(); roundWinsForBig = roundwinsforbig}
         
 
 type GameStateVarC = {
@@ -535,22 +543,22 @@ type GameClient(gameform, playernames, firstplayer, localPlayerNr, playerType : 
             let littplnr2 = state.littlePlayerNr2
             let bigplpts = state.playerPoints.[bigplnr]
             let littplpts = state.playerPoints.[littplnr1]
+            let roundwindforbig = state.roundWinsForBig
             let (ptgig, ptlitt) = 
                 if state.gameType = GameType.Zole then
-                    if littplpts = 0 then               ( 12, -6)
-                    elif littplpts < 31 then            ( 10, -5)
-                    elif littplpts < 60 then            (  8, -4)
-                    elif bigplpts = 0 then              (-14,  7)
-                    elif bigplpts < 31 then             (-12,  6)
-                    else                                (-10,  5) //bigplpts < 61
+                    if roundwindforbig = 8 then         ( 14, -7)
+                    elif littplpts < 31 then            ( 12, -6)
+                    elif littplpts < 60 then            ( 10, -5)
+                    elif roundwindforbig = 0 then       (-16,  8)
+                    elif bigplpts < 31 then             (-14,  7)
+                    else                                (-12,  6) //bigplpts < 61
                 else
-                    if littplpts = 0 then               (  6, -3)
+                    if roundwindforbig = 8 then         (  6, -3)
                     elif littplpts < 31 then            (  4, -2)
                     elif littplpts < 60 then            (  2, -1)
-                    elif bigplpts = 0 then              ( -8,  4)
+                    elif roundwindforbig = 0 then       ( -8,  4)
                     elif bigplpts < 31 then             ( -6,  3)
-                    else                                ( -4,  2) //bigplpts < 61
-            ret.[bigplnr] <- ptgig
+                    else                                ( -4,  2) //bigplpts < 61            ret.[bigplnr] <- ptgig
             ret.[littplnr1] <- ptlitt
             ret.[littplnr2] <- ptlitt
             ret
@@ -561,9 +569,13 @@ type GameClient(gameform, playernames, firstplayer, localPlayerNr, playerType : 
         let cur_state = 
             {initState with
                 firstPlayer = fpx;
-                firstPlayerX = fpx}
+                firstPlayerX = fpx;
+                gameCount = cur_state.gameCount}
         
-        let! bstartnewgame = statevar.WithSt cur_state |> x.wait_for_started
+        let! bstartnewgame = 
+            if cur_state.gameCount > 0 then
+                statevar.WithSt cur_state |> x.wait_for_started
+            else async{return true}
         if not bstartnewgame 
         then return {statevar with State = cur_state.Abort()} else
 
@@ -632,17 +644,20 @@ type GameClient(gameform, playernames, firstplayer, localPlayerNr, playerType : 
         let game_points = x.GetGamePoint cur_state
         localPlayer.FromGame.SetPoints game_points.[0] game_points.[1] game_points.[2]
         
+        (*
         let! bwait = x.wait_for_tick_all {statevar with State = cur_state} false
         if not bwait then 
             let cur_state = cur_state.Fail("waittick failed")
             return {statevar with State = cur_state; Flag = StateVarFlag.Failed "waittick failed"}
         else
+        *)
 
         let fpx = if cur_state.firstPlayerX = 2 then 0 else cur_state.firstPlayerX + 1
         let cur_state = 
             {cur_state with
                 firstPlayer = fpx;
-                firstPlayerX = fpx}
+                firstPlayerX = fpx;
+                gameCount = cur_state.gameCount + 1}
 
         return statevar.WithStW (cur_state, x.DoMsgGame)
     }
