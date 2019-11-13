@@ -5,5 +5,8 @@
     <Setting Name="ServerIp" Type="System.String" Scope="User">
       <Value Profile="(Default)">klons.id.lv</Value>
     </Setting>
+    <Setting Name="ShowDebugPrompt" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

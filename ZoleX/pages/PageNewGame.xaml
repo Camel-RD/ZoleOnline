@@ -31,7 +31,7 @@
             </ListView>
 
             <Button Text="Atcelt" 
-                    WidthRequest="120" 
+                    WidthRequest="150" 
                     Margin="10"
                     VerticalOptions="End" 
                     HorizontalOptions="Start">

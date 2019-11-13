@@ -39,8 +39,8 @@
                         
                     </StackLayout>
 
-                    <StackLayout WidthRequest="150"
-                             MinimumWidthRequest="150"
+                    <StackLayout WidthRequest="200"
+                             MinimumWidthRequest="200"
                              Margin="20">
 
                         <Button Text="Pieprasīt kodu" 

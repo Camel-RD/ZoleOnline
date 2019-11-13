@@ -88,7 +88,7 @@
             <StackLayout Orientation="Horizontal" VerticalOptions="End">
                 
                 <Button Text="Nosūtīt" 
-                    WidthRequest="120" 
+                    WidthRequest="150" 
                     Margin="10"
                     HorizontalOptions="Start">
 
@@ -101,7 +101,7 @@
                 </Button>
 
                 <Button Text="Atpakaļ" 
-                    WidthRequest="120" 
+                    WidthRequest="150" 
                     Margin="10"
                     HorizontalOptions="Start">
 

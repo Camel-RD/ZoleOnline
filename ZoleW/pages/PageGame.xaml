@@ -55,8 +55,19 @@
 
 
     <Canvas>
-        <Label Canvas.Left="630" Canvas.Top="5"
-               FontSize="12" Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}">(F5: debug mode)</Label>
+        <Label Canvas.Left="630" Canvas.Top="5" FontSize="12" 
+               Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}">
+            <Label.Style>
+                <Style TargetType="Label">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsDebugPromptVisible}" Value="False">
+                            <Setter Property="Label.Visibility" Value="Hidden"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Label.Style>
+            (F5: debug mode)
+        </Label>
         
         <Button x:Name="btGo"
                 Width="60" Height="60" Canvas.Left="706" Canvas.Top="49"

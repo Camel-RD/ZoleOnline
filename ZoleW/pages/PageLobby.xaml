@@ -102,7 +102,7 @@
             <DataGrid x:Name="DataGrid1"
                       Grid.Row="1"
                       ItemsSource="{Binding Path=PlayersOnline}"
-                      MaxWidth="400"
+                      MaxWidth="450"
                       AutoGenerateColumns="False"
                       IsReadOnly="True" 
                       GridLinesVisibility="None"
@@ -112,10 +112,10 @@
                       ColumnHeaderStyle="{StaticResource MyColumnHeader}">
                 <DataGrid.Columns>
                     <DataGridTextColumn x:Name="Col1" Header="vārds" 
-                                    Binding="{Binding Name}" MinWidth="150">
+                                    Binding="{Binding Name}" MinWidth="200">
                     </DataGridTextColumn>
                     <DataGridTextColumn x:Name="Col2" Header="punkti (spēles)"
-                                    Binding="{Binding ExtraInfo}" MinWidth="150">
+                                    Binding="{Binding ExtraInfo}" MinWidth="200">
                     </DataGridTextColumn>
                 </DataGrid.Columns>
             </DataGrid>

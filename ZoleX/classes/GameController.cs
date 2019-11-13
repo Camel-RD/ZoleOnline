@@ -691,6 +691,7 @@ namespace ZoleX
             GamePageVM.IsButtonZoleVisible = false;
             PointsPageVM.ShowYesNo = false;
             ShowText("");
+            App.MainPage = GamePage;
         }
 
         public void ReplyYesNoZole(bool yesno, bool zole)

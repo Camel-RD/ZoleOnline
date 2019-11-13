@@ -375,6 +375,7 @@ namespace ZoleW
         private bool _IsButtonZoleVisible = false;
         private bool _IsPointsVisible = true;
         private bool _IsNamePlatesVisible = true;
+        private bool _IsDebugPromptVisible = false;
         private bool isInDegugMode = false;
 
         public GamePageVM(CardImages cardImages)
@@ -556,6 +557,17 @@ namespace ZoleW
                 if (_IsNamePlatesVisible == value) return;
                 _IsNamePlatesVisible = value;
                 OnPropertyChanged("IsNamePlatesVisible");
+            }
+        }
+        
+        public bool IsDebugPromptVisible
+        {
+            get { return _IsDebugPromptVisible; }
+            set
+            {
+                if (_IsDebugPromptVisible == value) return;
+                _IsDebugPromptVisible = value;
+                OnPropertyChanged("IsDebugPromptVisible");
             }
         }
 

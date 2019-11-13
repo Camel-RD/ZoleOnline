@@ -34,5 +34,17 @@ namespace ZoleW.Properties {
                 this["ServerIp"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ShowDebugPrompt {
+            get {
+                return ((bool)(this["ShowDebugPrompt"]));
+            }
+            set {
+                this["ShowDebugPrompt"] = value;
+            }
+        }
     }
 }

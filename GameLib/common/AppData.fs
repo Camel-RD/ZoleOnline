@@ -67,6 +67,14 @@ module MyConverter =
         (int v.[3] <<< 24)
 
 type Logger() =
+    static member WriteLine(msg :string) = ()
+    static member WriteLine(format : string, [<ParamArray>] args : obj []) = ()
+    static member GatCaseLabel (obj : 'a) = ""
+    static member MsgToStr2 (msg1 : 'a, msg2 : 'b) = ""
+    static member BadMsg ((expected : string), (got : obj)) = ()
+    static member BadMsg ((tag : string), (expected : string), (got : obj)) = ()
+
+type LoggerA() =
     static member WriteLine(msg :string) = Debug.WriteLine(msg);
     static member WriteLine(format : string, [<ParamArray>] args : obj []) = Debug.WriteLine(format, args);
     
@@ -75,7 +83,7 @@ type Logger() =
         | case, _ -> case.Name
     
     static member MsgToStr2 (msg1 : 'a, msg2 : 'b) = 
-        Logger.GatCaseLabel(msg1) + "->" + Logger.GatCaseLabel(msg2)
+        LoggerA.GatCaseLabel(msg1) + "->" + LoggerA.GatCaseLabel(msg2)
 
     static member BadMsg ((expected : string), (got : obj)) = 
         let method = (new StackFrame(2, false)).GetMethod();

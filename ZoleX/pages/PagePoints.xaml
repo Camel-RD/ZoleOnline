@@ -56,20 +56,10 @@
             </ListView>
 
 
-            <Button Text=">>" WidthRequest="100" IsVisible="False">
-
-                <Button.Behaviors>
-                    <behaviors:EventHandlerBehavior EventName="Clicked">
-                        <behaviors:InvokeMethodAction TargetObject="{Binding}" MethodName="OnBtGoClicked" />
-                    </behaviors:EventHandlerBehavior>
-                </Button.Behaviors>
-
-            </Button>
-
             <StackLayout Orientation="Horizontal" IsVisible="{Binding ShowYesNo}">
-                <Label Text="Turpināsim?"/>
+                <Label Text="Turpināsim?" VerticalOptions="Center" Margin="10"/>
 
-                <Button Text="Jā" WidthRequest="100">
+                <Button Text="Jā" WidthRequest="80" Margin="10">
                     <Button.Behaviors>
                         <behaviors:EventHandlerBehavior EventName="Clicked">
                             <behaviors:InvokeMethodAction TargetObject="{Binding}" MethodName="OnBtYesClicked" />
@@ -77,7 +67,7 @@
                     </Button.Behaviors>
                 </Button>
 
-                <Button Text="Nē" WidthRequest="100">
+                <Button Text="Nē" WidthRequest="80" Margin="10">
                     <Button.Behaviors>
                         <behaviors:EventHandlerBehavior EventName="Clicked">
                             <behaviors:InvokeMethodAction TargetObject="{Binding}" MethodName="OnBtNoClicked" />

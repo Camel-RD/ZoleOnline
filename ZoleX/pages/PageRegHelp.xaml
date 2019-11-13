@@ -42,7 +42,7 @@
             </ScrollView>
 
             <Button Text="Atpakaļ" 
-                    WidthRequest="120"
+                    WidthRequest="150"
                     Grid.Row="2"
                     Margin="20"
                     HorizontalOptions="Start">

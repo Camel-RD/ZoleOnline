@@ -115,7 +115,7 @@ type private PlayerLocal (game, gameUI, playernr, playername, uuid, playernames)
                 cur_state
             |MsgToPlayer.FromGame (MsgGameToPlayer.GameData m) -> 
                 if m.gameType = GameType.Table then
-                    GameUI.ShowText "Neviens negrib būt lielais, spēlējam mazo zoli"
+                    GameUI.ShowText "Neviens negrib būt lielais, spēlējam galda zoli"
                 let cur_state = cur_state.SetGameData m.gameType m.bigPlayerNr m.firstPlayerNr
                 let k = if cur_state.gameType = GameType.Table then -1 else cur_state.bigPlayerNr
                 GameUI.ShowCards cur_state.cards cur_state.cardsOnDesk m.firstPlayerNr PlayerNr

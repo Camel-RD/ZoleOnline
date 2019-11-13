@@ -167,6 +167,7 @@ namespace ZoleW
             PointsPageVM.BtNoClicked += PointsPageVM_BtNoClicked;
 
             GamePageVM.IsInDegugMode = false;
+            GamePageVM.IsDebugPromptVisible = Properties.Settings.Default.ShowDebugPrompt;
 
             GamePage.Height = GamePageNormalHeight;
             MainWindow.Height = MainWindowNormalHeight;
@@ -684,6 +685,7 @@ namespace ZoleW
             GamePageVM.IsButtonZoleVisible = false;
             PointsPageVM.ShowYesNo = false;
             ShowText("");
+            MainWindow.Content = GamePage;
         }
 
         public void ReplyYesNoZole(bool yesno, bool zole)

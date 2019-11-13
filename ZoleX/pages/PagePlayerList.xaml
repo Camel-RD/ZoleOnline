@@ -50,7 +50,7 @@
             </ListView>
 
             <Button Text="Atpakaļ" 
-                    WidthRequest="120" 
+                    WidthRequest="150" 
                     Margin="10"
                     VerticalOptions="End" 
                     HorizontalOptions="Start">

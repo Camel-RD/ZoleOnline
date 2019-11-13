@@ -26,7 +26,7 @@
         </Style>
         <Style  TargetType="local:MyEntry">
             <Setter Property="TextColor" Value="{DynamicResource PrimaryTextColor}" />
-            <Setter Property="BackgroundColor" Value="{DynamicResource PageBackgroundColor}" />
+            <Setter Property="BackgroundColor" Value="#181818" />
             <Setter Property="FontSize" Value="Medium" />
         </Style>
         <Style TargetType="Button">
