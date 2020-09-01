@@ -21,20 +21,20 @@
             <Style x:Key="DataGridCellStyle1" TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource {x:Type DataGridCell}}">
                 <Setter Property="HorizontalAlignment" Value="Center"/>
             </Style>
-            <Style TargetType="DataGridCell" BasedOn="{StaticResource MetroDataGridCell}">
+            <Style TargetType="DataGridCell" BasedOn="{StaticResource MahApps.Styles.DataGridCell}">
                 <Style.Setters>
                     <Setter Property="TextBlock.TextAlignment" Value="Center" />
                 </Style.Setters>
             </Style>
             <Style x:Key="MyColumnHeader" 
-               BasedOn="{StaticResource MetroDataGridColumnHeader}" 
+               BasedOn="{StaticResource MahApps.Styles.DataGridColumnHeader}" 
                TargetType="{x:Type DataGridColumnHeader}">
                 <Setter Property="Controls:ControlsHelper.ContentCharacterCasing" Value="Normal"/>
             </Style>
             <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
                 <Setter Property="FontSize" Value="20"/>
                 <Setter Property="FontFamily" Value="Microsoft Sans Serif"/>
-                <Setter Property="Controls:ButtonHelper.PreserveTextCase" Value="True"/>
+                <Setter Property="Controls:ControlsHelper.ContentCharacterCasing" Value="Normal"/>
                 <Setter Property="Padding" Value="8,5,8,5"/>
             </Style>
             <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
@@ -71,7 +71,7 @@
 
         <Button x:Name="btGo" 
                 Width="60" Height="60" Canvas.Left="706" Canvas.Top="49"
-                Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
+                Style="{DynamicResource MahApps.Styles.Button.Circle}">
             <Rectangle Width="30" Height="30"
                        Fill="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}">
                 <Rectangle.OpacityMask>

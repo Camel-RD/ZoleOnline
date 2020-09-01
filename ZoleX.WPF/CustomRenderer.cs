@@ -21,8 +21,8 @@ namespace ZoleX.WPF
                 var textcolor = el.TextColor.ToMediaColor();
                 var bordercolor = el.BorderColor.ToMediaColor();
                 tb.BorderThickness = new System.Windows.Thickness(1);
-                tb.BorderBrush = new SolidColorBrush(bordercolor);
-                tb.Foreground = new SolidColorBrush(textcolor);
+                tb.BorderBrush = new System.Windows.Media.SolidColorBrush(bordercolor);
+                tb.Foreground = new System.Windows.Media.SolidColorBrush(textcolor);
                 tb.FontSize = el.FontSize;
             }
         }

@@ -25,7 +25,7 @@
             <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
                 <Setter Property="FontSize" Value="20"/>
                 <Setter Property="FontFamily" Value="Microsoft Sans Serif"/>
-                <Setter Property="Controls:ButtonHelper.PreserveTextCase" Value="True"/>
+                <Setter Property="Controls:ControlsHelper.ContentCharacterCasing" Value="Normal"/>
                 <Setter Property="HorizontalAlignment" Value="Right"/>
                 <Setter Property="Padding" Value="8,5,8,5"/>
                 <Setter Property="Margin" Value="10,20,10,10"/>

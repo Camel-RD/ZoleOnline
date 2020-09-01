@@ -28,7 +28,7 @@ type private ServerStateVar = {
 
 
 type AppServer(port, datafolder, addhours, emailserveraddr, emailserverport, 
-        emailfrom, emailfromname) as this =
+        emailfrom, emailfromname, emailserverpsw : string) as this =
     let MailBox = new AutoCancelAgent<MsgToServer>(this.DoInbox)
     let RawUserId_Generator = IdGenerator(0)
     let GameId_Generator = IdGenerator(0)
@@ -47,6 +47,13 @@ type AppServer(port, datafolder, addhours, emailserveraddr, emailserverport,
         MsgToServer.FromListener msg |> this.TakeMessage
     
     let Listener = ServerListener(port, ftakemsgfromlistener)
+
+
+    let mutable _CountNewConnections = 0
+    let mutable _CountRegCodesSent = 0
+    let mutable _CountRegistrations = 0
+    let mutable _CountLoggins = 0
+    let mutable _CountNewGames = 0
 
 
     let OUDById id = 
@@ -133,6 +140,7 @@ type AppServer(port, datafolder, addhours, emailserveraddr, emailserverport,
             msg.Body <- "Tavs reģistrācijas kods Zolītes serverī: " + code
             let SmtpServer = new SmtpClient(emailserveraddr)
             SmtpServer.Port <- emailserverport
+            SmtpServer.Credentials <- new System.Net.NetworkCredential(emailfrom, emailserverpsw);
             SmtpServer.Send(msg)
             Logger.WriteLine("Sent code:{0} to {1}", code, addr)
         let task_async = async{
@@ -143,6 +151,13 @@ type AppServer(port, datafolder, addhours, emailserveraddr, emailserverport,
     member x.AddRegUser (name : string, psw : string) =
         AppUserData.AddRegUser (name, psw) |> Async.RunSynchronously
 
+    member x.GetStats () =
+        (_CountNewConnections, 
+         _CountRegCodesSent, 
+         _CountRegistrations, 
+         _CountLoggins, 
+         _CountNewGames)
+
     member private x.AddNewConnection (state : ServerState) (connection : ServerConnection) =
         let new_user = new User(_FromUser, connection)
         let new_rawid = RawUserId_Generator.GetNext()
@@ -150,6 +165,7 @@ type AppServer(port, datafolder, addhours, emailserveraddr, emailserverport,
         new_oud.Location <- UserLocation.Raw
         new_user.SetUserData (new_rawid, "", "")
         AppOnlineUserData.Add (new_rawid, new_oud)
+        _CountNewConnections <- _CountNewConnections + 1
         Logger.WriteLine("AppServer: AddNewConnection: userid {0}", new_user.Id)
         new_user.Start()
         let b = connection.Start((new_user :> IUser).FromClient)
@@ -290,6 +306,7 @@ type AppServer(port, datafolder, addhours, emailserveraddr, emailserverport,
         user.SetUserData (user.Id, name, psw)
         x.SendMail (userdata.Email, userdata.RegCode)
         replych.Reply (NewOrLoginUserReply.OK user.Id)
+        _CountRegCodesSent <- _CountRegCodesSent + 1
         Logger.WriteLine("AppServer: GetRegCode: userid: {0} name: {1} code: {2}", user.Id, name, userdata.RegCode)
         return state
     }
@@ -378,6 +395,7 @@ type AppServer(port, datafolder, addhours, emailserveraddr, emailserverport,
         AppUserData.SetUserDataOriginal userdata
         replych.Reply (NewOrLoginUserReply.OK user.Id)
         Lobby.To.EnterServer user
+        _CountRegistrations <- _CountRegistrations + 1
         Logger.WriteLine("AppServer: RegisterNewUser: userid: {0} name: {1}", user.Id, name)
         return state
     }
@@ -452,6 +470,7 @@ type AppServer(port, datafolder, addhours, emailserveraddr, emailserverport,
         onlineuser.OnlineUserType <- OnlineUserType.Registered
         replych.Reply (NewOrLoginUserReply.OK userid)
         Lobby.To.EnterServer user
+        _CountLoggins <- _CountLoggins + 1
         Logger.WriteLine("AppServer: LogInUser: userid: {0} name: {1}", user.Id, name)
         return state
     }
@@ -519,6 +538,7 @@ type AppServer(port, datafolder, addhours, emailserveraddr, emailserverport,
         onlineuser.OnlineUserType <- OnlineUserType.Guest
         replych.Reply (NewOrLoginUserReply.OK userid)
         Lobby.To.EnterServer user
+        _CountLoggins <- _CountLoggins + 1
         Logger.WriteLine("AppServer: LogInUserAsGuest: userid: {0} name: {1}", user.Id, name)
         return state
     }
@@ -677,7 +697,7 @@ type AppServer(port, datafolder, addhours, emailserveraddr, emailserverport,
         let ousers_present = ouserids_present |> Array.map (fun id -> AppOnlineUserData.[id])
         let users_present = ousers_present |> Array.map (fun ou -> ou.User)
         if ouserids_present.Length <> 3 then
-            Logger.WriteLine "AppServer: StartNewGame: userid not foud"
+            Logger.WriteLine "AppServer: StartNewGame: userid not found"
             for ouser in ousers_present do 
                 ouser.User.FromGameOrganizer.CancelNewGame()
                 ouser.Location <- UserLocation.InLobby
@@ -687,6 +707,7 @@ type AppServer(port, datafolder, addhours, emailserveraddr, emailserverport,
         let new_game = new GamePlaying(new_game_id, _FromGamePlaying, users_present)
         let new_games = state.GamesPlaying.Add (new_game_id, new_game)
         new_game.Start()
+        _CountNewGames <- _CountNewGames + 1
         Logger.WriteLine("AppServer.StartNewGame: startin new game{0}", new_game_id)
         {state with 
             GamesPlaying = new_games}

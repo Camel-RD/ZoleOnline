@@ -73,10 +73,14 @@ type ServerConnection(Socket : TcpClient) =
             let! bmsg = x.ReadMsg stream
             match bmsg with 
             |ServerReadResult.Ok msg ->
-                try 
-                    GwToUser.Value.TakeMessage msg
-                    return! readloop() 
-                with _-> return false
+                let rt = 
+                    try 
+                        GwToUser.Value.TakeMessage msg
+                        true
+                    with _-> false
+                if rt 
+                then return! readloop() 
+                else return false
             |ServerReadResult.Timeout
             |ServerReadResult.Failed -> return false
         }
@@ -118,7 +122,7 @@ type ServerConnection(Socket : TcpClient) =
     }
 
     member private x.ReadMsg (stream : NetworkStream) = async {
-        let task_readlen = x.SocketRead(stream, 4, -1)
+        let task_readlen = x.SocketRead(stream, 4, 3600*1000)
         let! ret = Async.Catch (task_readlen)
         let blen = 
             match ret with
@@ -130,7 +134,7 @@ type ServerConnection(Socket : TcpClient) =
         else
         let blen = blen.Value
         let len = MyConverter.ByteToInt blen
-        if len > 20000 then 
+        if len > 10000 then 
             return ServerReadResult.Failed
         else
         let task = async{

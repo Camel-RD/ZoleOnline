@@ -1,0 +1,9 @@
+icon.png
+launcher_foreground.png
+
+mipmap-hdpi 72-72 162-162
+mipmap-mdpi 48-48 108-108
+mipmap-xhdpi 96-96 216-216
+mipmap-xxhdpi 144-144 324-324
+mipmap-xxxhdpi 192-192 432-432
+

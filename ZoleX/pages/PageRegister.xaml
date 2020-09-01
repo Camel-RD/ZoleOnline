@@ -19,24 +19,28 @@
                             AlignItems="Center" 
                             JustifyContent="Center">
 
-                    <StackLayout Margin="20">
+                    <StackLayout Margin="20" WidthRequest="300">
 
-                        <Label Text="Tavs vārds:" Margin="0"/>
-                        <local:MyEntry WidthRequest="200" 
-                                   Text="{Binding Name}"/>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Vārds: " VerticalOptions="Center"/>
+                            <local:MyEntry  Text="{Binding Name}" HorizontalOptions="FillAndExpand"/>
+                        </StackLayout>
 
-                        <Label Text="Parole:" Margin="0,10,0,0"/>
-                        <local:MyEntry WidthRequest="200" 
-                                   Text="{Binding Psw}"/>
+                        <StackLayout Orientation="Horizontal" Margin="0,10,0,0">
+                            <Label Text="Parole: " VerticalOptions="Center"/>
+                            <local:MyEntry Text="{Binding Psw}" HorizontalOptions="FillAndExpand"/>
+                        </StackLayout>
 
-                        <Label Text="E-pasta adrese:" Margin="0,10,0,0"/>
-                        <local:MyEntry WidthRequest="300" 
-                                   Text="{Binding Email}"/>
+                        <StackLayout Orientation="Horizontal" Margin="0,10,0,0">
+                            <Label Text="E-pasta: " VerticalOptions="Center"/>
+                            <local:MyEntry Text="{Binding Email}" HorizontalOptions="FillAndExpand"/>
+                        </StackLayout>
 
-                        <Label Text="Reģistrčijas kods:" Margin="0,10,0,0"/>
-                        <local:MyEntry WidthRequest="200" 
-                                   Text="{Binding RegCode}"/>
-                        
+                        <StackLayout Orientation="Horizontal" Margin="0,10,0,0">
+                            <Label Text="Reģistrācijas kods: " VerticalOptions="Center"/>
+                            <local:MyEntry Text="{Binding RegCode}" HorizontalOptions="FillAndExpand"/>
+                        </StackLayout>
+
                     </StackLayout>
 
                     <StackLayout WidthRequest="200"

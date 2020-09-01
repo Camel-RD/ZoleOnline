@@ -8,9 +8,10 @@ let PrintMenu() =
     printfn "1. Start server"
     printfn "2. Test mail"
     printfn "3. Add user"
+    printfn "4. Get Stats"
     printfn "x. Stop server"
 
-let SendMail (addr:string) from =
+let SendMail (addr:string) from (psw:string) =
     let msg = new MailMessage()
     msg.From <- MailAddress(from, "Mana Zole")
     msg.To.Add(addr)
@@ -18,15 +19,16 @@ let SendMail (addr:string) from =
     msg.Body <- "Rinda 1\r\nrinda2"
     let SmtpServer = new SmtpClient("127.0.0.1")
     SmtpServer.Port <- 25
+    SmtpServer.Credentials <- new System.Net.NetworkCredential(from, psw);
     SmtpServer.Send(msg)
     printfn "Mail sent"
 
 [<EntryPoint>]
 let main argv =
     let argv = 
-        if argv.Length <> 7 then 
+        if argv.Length <> 8 then 
             printfn "Missing arguments, using default"
-            [|"7777";"0"; "0"; ""; ""; ""; ""|]
+            [|"7777";"0"; "0"; ""; ""; ""; ""; ""|]
         else argv
     let port = int argv.[0]
     let datafolder = argv.[1]
@@ -36,12 +38,13 @@ let main argv =
     let emailserverport = if argv.[4] = "" then 25 else int argv.[4]
     let emailfrom = argv.[5]
     let emailfromname = argv.[6]
+    let emailserverpsw = argv.[7]
 
 
     printfn "Server port:%A" port
     use server = 
         new AppServer(port, datafolder, addhours, emailserveraddr, 
-            emailserverport, emailfrom, emailfromname)
+            emailserverport, emailfrom, emailfromname, emailserverpsw)
 
     let rec loop() = 
         let key = Console.ReadLine()
@@ -58,7 +61,9 @@ let main argv =
             let addr = Console.ReadLine()
             printf "\nfrom:"
             let from = Console.ReadLine()
-            SendMail addr from
+            printf "\npsw:"
+            let psw = Console.ReadLine()
+            SendMail addr from psw
             loop()
         |"3" -> 
             printf "\nName:"
@@ -68,6 +73,19 @@ let main argv =
             if name <> "" && psw <> "" then
                 let q = server.AddRegUser (name, psw)
                 printf "Done:%A" q
+            loop()
+        |"4" ->
+            let (_CountNewConnections, 
+                 _CountRegCodesSent, 
+                 _CountRegistrations, 
+                 _CountLoggins, 
+                 _CountNewGames) = server.GetStats()
+            printfn "\nStats:"
+            printfn "New Connections: %u" _CountNewConnections
+            printfn "Reg Codes Sent: %u" _CountRegCodesSent
+            printfn "Registrations: %u" _CountRegistrations
+            printfn "Loggins: %u" _CountLoggins
+            printfn "New Games: %u" _CountNewGames
             loop()
         |_->
             PrintMenu()

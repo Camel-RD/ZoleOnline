@@ -32,7 +32,9 @@
         <Style TargetType="Button">
             <Setter Property="TextColor" Value="{DynamicResource PrimaryTextColor}" />
             <Setter Property="BackgroundColor" Value="#202020" />
+            <Setter Property="TextTransform" Value="None" />
             <Setter Property="FontSize" Value="Medium" />
+            <Setter Property="CornerRadius" Value="8" />
         </Style>
 
     </Application.Resources>
