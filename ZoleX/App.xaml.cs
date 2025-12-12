@@ -1,76 +1,72 @@
-﻿using System;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
-using Xamarin.Essentials;
+﻿using Zole3.Pages;
 
-namespace ZoleX
+namespace Zole3
 {
     public partial class App : Application
     {
-        GameController GameController = null;
         public App()
         {
             InitializeComponent();
+            UserAppTheme = AppTheme.Dark;
+            InitCardSizes();
         }
 
-        public void DoQuit()
+        GameController GameController = null;
+
+        protected override Window CreateWindow(IActivationState activationState)
         {
-            if (Device.RuntimePlatform == Device.Android)
-                DependencyService.Get<IAndroidMethods>().CloseApp();
+            //Window window = base.CreateWindow(activationState);
+            Window window = new Window(new InitPage());
+            window.Activated += (s, e) =>
+            {
+                GameController = GameController.Create(this);
+                if (LastPage != null && Windows[0].Page != LastPage)
+                    Windows[0].Page = LastPage;
+            };
+            window.Resumed += (s, e) =>
+            {
+                if (LastPage != null && Windows[0].Page != LastPage)
+                    Windows[0].Page = LastPage;
+            };
+            return window; 
         }
+
+        public string Called = "";
 
         private void InitCardSizes()
         {
-            if (Device.RuntimePlatform != Device.Android) return;
+            if (DeviceInfo.Platform != DevicePlatform.Android) return;
             var mdi = DeviceDisplay.MainDisplayInfo;
-            var w = Math.Max(mdi.Height, mdi.Width);
-            int w2 = (int)(w / mdi.Density * 0.9d);
-            int cw = w2 / 10 - 2;
+            double sz_big = Math.Max(mdi.Width, mdi.Height);
+            double sz_small = Math.Min(mdi.Width, mdi.Height);
+            int w1 = (int)(sz_big / mdi.Density * 0.9d / 10d) - 2;
+            int w2 = (int)(sz_small / mdi.Density * 0.9d / 5d) - 2;
+            var cw = Math.Min(w1, w2);
             int ch = (int)(96d / 71d * (double)cw);
             Locator.CardWidth = cw;
             Locator.CardHeight = ch;
+            Called += cw;
         }
 
         protected override void OnStart()
         {
-            InitCardSizes();
-
-            GameController = new GameController(this);
         }
 
+        Page LastPage;
+        
         protected override void OnSleep()
         {
+            base.OnSleep();
             GameController?.DoOnGameClosing();
+            LastPage = Windows[0].Page;
         }
 
         protected override void OnResume()
         {
-            // Handle when your app resumes
+            base.OnResume();
+            if (LastPage != null && Windows[0].Page != LastPage)
+                Windows[0].Page = LastPage;
         }
-    }
-
-    public interface IAndroidMethods
-    {
-        void CloseApp();
-    }
-
-    public static class Locator
-    {
-        public static int CardWidth { get; set; } = 60;
-        public static int CardHeight { get; set; } = 82;
-        public static int CardColumnWidth => CardWidth + 5;
-        public static int CardRowHeight => CardHeight + 23;
-        public static StartUpPageVM StartUpPageVM => StartUpPageVM.ST;
-        public static PointsPageVM PointsPageVM => PointsPageVM.DTST;
-        public static GamePageVM GamePageVM => GamePageVM.ST;
-        public static LogInPageVM LogInPageVM => LogInPageVM.ST;
-        public static LobbyPageVM LobbyPageVM => LobbyPageVM.ST;
-        public static NewGamePageVM NewGamePageVM => NewGamePageVM.ST;
-        public static RegisterPageVM RegisterPageVM => RegisterPageVM.ST;
-        public static NewPrivateGamePageVM NewPrivateGamePageVM => NewPrivateGamePageVM.ST;
-        public static SettingsPageVM SettingsPageVM => SettingsPageVM.ST;
-        public static CalendarPageVM CalendarPageVM => CalendarPageVM.ST;
-        public static WaititngPageVM WaititngPageVM => WaititngPageVM.ST;
 
     }
 }

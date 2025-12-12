@@ -1,29 +1,44 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:i="clr-namespace:Behaviors;assembly=Behaviors"
-             xmlns:local="clr-namespace:ZoleX"
-             BackgroundColor="{DynamicResource PageBackgroundColor}"
-             mc:Ignorable="d"
-             x:Class="ZoleX.PageNewGame"
-             d:BindingContext="{Binding Source={x:Static local:Locator.NewGamePageVM}}">
-    
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:models="clr-namespace:Zole3.Models"
+             xmlns:local="clr-namespace:Zole3"
+             x:Class="Zole3.Pages.PageNewGame"
+             x:DataType="models:NewGamePageVM"
+             Title="PageNewGame">
+
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="Gaidam spēlētājus" HorizontalOptions="CenterAndExpand" Margin="20"/>
+            <Label Text="Gaidam spēlētājus" HorizontalOptions="Center" Margin="20"/>
 
             <ListView x:Name="listView1" 
                           ItemsSource="{Binding Path=Players}">
 
                 <ListView.ItemTemplate>
-                    <DataTemplate>
+                    <DataTemplate x:DataType="models:NewGamePlayerPageVM">
                         <ViewCell>
-                            <StackLayout Orientation="Horizontal" >
-                                <Label Text ="{Binding Name}" WidthRequest="200" HorizontalOptions="Start" VerticalOptions="Center" TextColor="White"/>
-                                <Label Text ="{Binding ExtraInfo}" WidthRequest="200" HorizontalOptions="Center" VerticalOptions="Center" TextColor="White"/>
-                            </StackLayout>
+                            <Grid Padding="10">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Label 
+		                            Grid.Column="0"
+		                            Text ="{Binding Name}" 
+		                            HorizontalOptions="Start" 
+		                            VerticalOptions="Center" 
+		                            TextColor="White"/>
+                                <Label 
+		                            Grid.Column="2"
+		                            Text ="{Binding ExtraInfo}" 
+		                            HorizontalOptions="Center" 
+		                            VerticalOptions="Center" 
+		                            TextColor="White"/>
+                            </Grid>
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
@@ -31,20 +46,16 @@
             </ListView>
 
             <Button Text="Atcelt" 
+                    Command="{Binding BtCancelClickCommand}"
                     WidthRequest="150" 
                     Margin="10"
                     VerticalOptions="End" 
                     HorizontalOptions="Start">
-
-                <Button.Behaviors>
-                    <i:EventHandlerBehavior EventName="Clicked">
-                        <i:InvokeMethodAction TargetObject="{Binding}" MethodName="OnBtCancelClick" />
-                    </i:EventHandlerBehavior>
-                </Button.Behaviors>
-
             </Button>
 
 
         </StackLayout>
     </ContentPage.Content>
+    
+
 </ContentPage>

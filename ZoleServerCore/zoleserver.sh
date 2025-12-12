@@ -1,0 +1,1 @@
+./ZoleServerCore 7777 0 1 "" 25 "mana.zolite@klons.id.lv" "Mana Zole" "parole"

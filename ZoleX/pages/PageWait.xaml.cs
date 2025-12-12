@@ -1,20 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+namespace Zole3.Pages;
 
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
-
-namespace ZoleX
+public partial class PageWait : ContentPage
 {
-    [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class PageWait : ContentPage
-    {
-        public PageWait()
-        {
-            InitializeComponent();
-        }
-    }
+	public PageWait()
+	{
+		InitializeComponent();
+	}
 }

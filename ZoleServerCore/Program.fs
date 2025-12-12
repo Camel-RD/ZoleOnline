@@ -3,6 +3,11 @@
 open System
 open GameServerLib
 open System.Net.Mail
+open System.IO
+open FsConfig
+open Microsoft.Extensions.Configuration.Json
+open Microsoft.Extensions.Configuration
+
 
 let PrintMenu() =
     printfn "1. Start server"
@@ -23,28 +28,61 @@ let SendMail (addr:string) from (psw:string) =
     SmtpServer.Send(msg)
     printfn "Mail sent"
 
+let read_config () =
+    let configurationRoot =
+        ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("config.json")
+            .Build()
+    let appConfig = AppConfig(configurationRoot)
+    let config = appConfig.Get<ServerOptions>()
+    match config with
+    |ConfigParseResult.Ok value -> Result.Ok value
+    |ConfigParseResult.Error e -> Result.Error (e.ToString())
+
+
+let read_args (argv:string array) : Result<ServerOptions, string> =
+    if argv.Length <> 9 then 
+        Result.Error "Missing arguments"
+    else
+        let options : ServerOptions = {
+            Port = int argv.[0]
+            DataFolder = if argv.[1] = "0" then "" else argv.[1]
+            AddHours = int argv.[2]
+            EmailServerAddr = argv.[3]
+            EmailServerPort = if argv.[4] = "" then 25 else int argv.[4]
+            EmailFrom = argv.[5]
+            EmailFromName = argv.[6]
+            EmailServerPsw = argv.[7]
+            UseEmailValidation = argv.[8] = "1"
+        }
+        Result.Ok options
+        
+
+
 [<EntryPoint>]
 let main argv =
-    let argv = 
-        if argv.Length <> 8 then 
-            printfn "Missing arguments, using default"
-            [|"7777";"0"; "0"; ""; ""; ""; ""; ""|]
-        else argv
-    let port = int argv.[0]
-    let datafolder = argv.[1]
-    let datafolder = if datafolder = "0" then "" else datafolder
-    let addhours = int argv.[2]
-    let emailserveraddr = argv.[3]
-    let emailserverport = if argv.[4] = "" then 25 else int argv.[4]
-    let emailfrom = argv.[5]
-    let emailfromname = argv.[6]
-    let emailserverpsw = argv.[7]
-
-
-    printfn "Server port:%A" port
-    use server = 
-        new AppServer(port, datafolder, addhours, emailserveraddr, 
-            emailserverport, emailfrom, emailfromname, emailserverpsw)
+    let options = 
+        if argv.Length > 0 then 
+            let argv = 
+                if argv.Length <> 9 then 
+                    printfn "Missing arguments, using default"
+                    [|"7777";"0"; "0"; ""; ""; ""; ""; ""; "0"|]
+                else argv
+            read_args(argv)
+        else
+            read_config()
+    
+    let options = 
+        match options with
+        |Result.Ok value -> value
+        |Result.Error e ->
+            printfn $"Error: {e}"
+            exit -1
+            ServerOptions.Empty
+    
+    printfn "Server port:%A" options.Port
+    use server = new AppServer(options)
 
     let rec loop() = 
         let key = Console.ReadLine()

@@ -1,0 +1,11 @@
+{
+	"Port": 7777,
+	"DataFolder": "",
+	"AddHours": 0,
+	"EmailServerAddr": "",
+	"EmailServerPort": 0,
+	"EmailFrom": "",
+	"EmailFromName": "",
+	"EmailServerPsw": "",
+	"UseEmailValidation": false
+}

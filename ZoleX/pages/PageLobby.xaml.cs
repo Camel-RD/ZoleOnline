@@ -1,22 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Zole3.Models;
 
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
+namespace Zole3.Pages;
 
-namespace ZoleX
+public partial class PageLobby : ContentPage
 {
-    [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class PageLobby : ContentPage
-    {
-        public PageLobby()
-        {
-            InitializeComponent();
-            if (DesignMode.IsDesignModeEnabled)
-                BindingContext = new LobbyPageVM();
-        }
-    }
+	public PageLobby()
+	{
+		InitializeComponent();
+	}
 }

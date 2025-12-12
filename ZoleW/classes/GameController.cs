@@ -22,6 +22,7 @@ namespace ZoleW
         private PageLobby PageLobby = null;
         private PageCalendar PageCalendar = null;
         private PageRegister PageRegister = null;
+        private PageRegister2 PageRegister2 = null;
         private PageNewGame PageNewGame = null;
         private PageNewPrivateGame PageNewPrivateGame = null;
         private PageGame GamePage = null;
@@ -96,6 +97,7 @@ namespace ZoleW
             PageCalendar = new PageCalendar();
             PageRegHelp = new PageRegHelp();
             PageRegister = new PageRegister();
+            PageRegister2 = new PageRegister2();
             PageLobby = new PageLobby();
             PageNewGame = new PageNewGame();
             PageNewPrivateGame = new PageNewPrivateGame();
@@ -118,6 +120,7 @@ namespace ZoleW
             PageLogIn.DataContext = LogInPageVM;
             PageRegHelp.DataContext = LogInPageVM;
             PageRegister.DataContext = RegisterPageVM;
+            PageRegister2.DataContext = RegisterPageVM;
             PageLobby.DataContext = LobbyPageVM;
             PageCalendar.DataContext = CalendarPageVM;
             PageNewGame.DataContext = NewGamePageVM;
@@ -191,8 +194,10 @@ namespace ZoleW
             if (string.IsNullOrEmpty(UserName)) UserName = "Es";
             StartUpPageVM.PlayerName = UserName;
             StartUpPageVM.ShowOnlineGame = !HideOnlineGameButton;
-            if (string.IsNullOrEmpty(ServerIp)) ServerIp = "klons.id.lv";
+            if (string.IsNullOrEmpty(ServerIp)) ServerIp = "zole.klons.id.lv";
             if (string.IsNullOrEmpty(ServerPort)) ServerPort = "7777";
+            if (ServerIp?.ToLower() == "klons.id.lv")
+                ServerIp = "zole.klons.id.lv";
 
             var gameformwrapped = GameFormWrapper.GetGUIWrapper(this);
             AppClient = new AppClient(gameformwrapped);
@@ -313,7 +318,10 @@ namespace ZoleW
         {
             string name = LogInPageVM.Name;
             RegisterPageVM.Name = name;
-            MainWindow.Content = PageRegister;
+            if (AppClient.UseEmailValidation)
+                MainWindow.Content = PageRegister;
+            else
+                MainWindow.Content = PageRegister2;
         }
 
         private void LogInPageVM_BtLogInClicked(object sender, EventArgs e)
@@ -366,15 +374,18 @@ namespace ZoleW
                 ShowMessage("Jānorāda parole");
                 return;
             }
-            if (string.IsNullOrEmpty(regcode))
+            if (AppClient.UseEmailValidation)
             {
-                ShowMessage("Jānorāda reģistrācijas kods");
-                return;
-            }
-            if (name.Length > 15 || psw.Length > 15 || regcode.Length > 15)
-            {
-                ShowMessage("Ievadīts pārāk garšs teksts");
-                return;
+                if (string.IsNullOrEmpty(regcode))
+                {
+                    ShowMessage("Jānorāda reģistrācijas kods");
+                    return;
+                }
+                if (name.Length > 15 || psw.Length > 15 || regcode.Length > 15)
+                {
+                    ShowMessage("Ievadīts pārāk garšs teksts");
+                    return;
+                }
             }
             UserName = name;
             UserPsw = psw;

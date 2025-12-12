@@ -44,7 +44,7 @@ type private UserStateVar = {
         {x with State = state; Flag = StateVarFlag.Failed(msg)}
 
 
-type User(toServer, serverconnection) as this =
+type User(toServer, serverconnection, useemailvalidation) as this =
     let MailBox = new AutoCancelAgent<MsgToUser>(this.DoInbox)
     let InitState = UserState.InitState
     let ToServer : IUserToServer = toServer
@@ -125,9 +125,9 @@ type User(toServer, serverconnection) as this =
             let! q =_ToClient.ConnectionRefused msg
             return statevar.RetFailure(cur_state, msg)
         else 
-
+        let greeting = if not useemailvalidation then AppData.RetGreetingNoEmailValidation else ""
         let cur_state = {cur_state with Status = UserStatus.Connected}
-        let! q = _ToClient.Connected ""
+        let! q = _ToClient.Connected greeting
         return {statevar with State = cur_state; Worker = x.DoLogIn}
     }
 

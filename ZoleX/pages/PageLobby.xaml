@@ -1,14 +1,13 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:i="clr-namespace:Behaviors;assembly=Behaviors"
-             xmlns:local="clr-namespace:ZoleX"
-             BackgroundColor="{DynamicResource PageBackgroundColor}"
-             mc:Ignorable="d"
-             x:Class="ZoleX.PageLobby"
-             d:BindingContext="{Binding Source={x:Static local:Locator.LobbyPageVM}}">
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:models="clr-namespace:Zole3.Models"
+             xmlns:local="clr-namespace:Zole3"
+             x:Class="Zole3.Pages.PageLobby"
+             x:DataType="models:LobbyPageVM"
+             Title="PageLobby">
 
     <ContentPage.Content>
         <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
@@ -19,20 +18,16 @@
 
                 <StackLayout Margin="20">
 
-                    <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand" Margin="20">
-                        <Label Text="Spēlētāju skaits serverī: "/>
-                        <Label Text="{Binding PlayerOnlineCount}" d:Text="12"/>
-                    </StackLayout>
+                    <HorizontalStackLayout HorizontalOptions="Center" Margin="20">
+                        <Label Text="Spēlētāju skaits serverī:  "/>
+                        <Label Text="{Binding PlayerOnlineCount}"/>
+                    </HorizontalStackLayout>
 
                     <Button Text="Spēlētāju saraksts" 
+                            Command="{Binding BtListPlayersClickedCommand}"
                             HorizontalOptions="Center"
                             WidthRequest="200"
                             Margin="0,20,0,0">
-                        <Button.Behaviors>
-                            <i:EventHandlerBehavior EventName="Clicked">
-                                <i:InvokeMethodAction TargetObject="{Binding}" MethodName="OnBtListPlayersClicked" />
-                            </i:EventHandlerBehavior>
-                        </Button.Behaviors>
                     </Button>
 
                 </StackLayout>
@@ -42,43 +37,29 @@
                              WidthRequest="200">
 
                     <Button Text="Jauna spēle" 
-                        Margin="0,20,0,0">
-                        <Button.Behaviors>
-                            <i:EventHandlerBehavior EventName="Clicked">
-                                <i:InvokeMethodAction TargetObject="{Binding}" MethodName="OnBtJoinGameClick" />
-                            </i:EventHandlerBehavior>
-                        </Button.Behaviors>
+                            Command="{Binding BtJoinGameClickCommand}"
+                            Margin="0,20,0,0">
                     </Button>
 
                     <Button Text="Privāta spēle" 
-                        Margin="0,20,0,0">
-                        <Button.Behaviors>
-                            <i:EventHandlerBehavior EventName="Clicked">
-                                <i:InvokeMethodAction TargetObject="{Binding}" MethodName="OnBtJoinPrivateGameClicked" />
-                            </i:EventHandlerBehavior>
-                        </Button.Behaviors>
+                            Command="{Binding BtJoinPrivateGameClickedCommand}"
+                            Margin="0,20,0,0">
                     </Button>
 
                     <Button Text="Plānotājs" 
-                        Margin="0,20,0,0">
-                        <Button.Behaviors>
-                            <i:EventHandlerBehavior EventName="Clicked">
-                                <i:InvokeMethodAction TargetObject="{Binding}" MethodName="OnBtCalendarClicked" />
-                            </i:EventHandlerBehavior>
-                        </Button.Behaviors>
+                            Command="{Binding BtCalendarClickedCommand}"
+                            Margin="0,20,0,0">
                     </Button>
 
                     <Button Text="Iziet" 
-                        Margin="0,20,0,0">
-                        <Button.Behaviors>
-                            <i:EventHandlerBehavior EventName="Clicked">
-                                <i:InvokeMethodAction TargetObject="{Binding}" MethodName="OnBtExitClick" />
-                            </i:EventHandlerBehavior>
-                        </Button.Behaviors>
+                            Command="{Binding BtExitClickCommand}"
+                            Margin="0,20,0,0">
                     </Button>
                 </StackLayout>
-            
+
             </FlexLayout>
         </StackLayout>
     </ContentPage.Content>
+    
+
 </ContentPage>

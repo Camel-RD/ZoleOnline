@@ -1,20 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+namespace Zole3.Pages;
 
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
-
-namespace ZoleX
+public partial class PageLogIn : ContentPage
 {
-    [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class PageLogIn : ContentPage
-    {
-        public PageLogIn()
-        {
-            InitializeComponent();
-        }
-    }
+	public PageLogIn()
+	{
+		InitializeComponent();
+	}
 }

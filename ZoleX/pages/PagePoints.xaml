@@ -1,15 +1,12 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:local="clr-namespace:ZoleX"
-             xmlns:design="clr-namespace:ZoleX;assembly=ZoleX"
-             xmlns:behaviors="clr-namespace:Behaviors;assembly=Behaviors"
-             mc:Ignorable="d"
-             x:Class="ZoleX.PagePoints"
-             BackgroundColor="{DynamicResource PageBackgroundColor}"
-             d:BindingContext="{x:Static design:Locator.PointsPageVM}">
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:models="clr-namespace:Zole3.Models"
+             xmlns:local="clr-namespace:Zole3"
+             x:Class="Zole3.Pages.PagePoints"
+             x:DataType="models:PointsPageVM"
+             Title="PagePoints">
 
     <ContentPage.Content>
         <StackLayout Orientation="Vertical">
@@ -34,7 +31,7 @@
                           ItemsSource="{Binding Path=PointsRows}">
 
                 <ListView.ItemTemplate>
-                    <DataTemplate>
+                    <DataTemplate x:DataType="models:PointsRow">
                         <ViewCell>
                             <Grid >
                                 <Grid.RowDefinitions>
@@ -56,23 +53,20 @@
             </ListView>
 
 
-            <StackLayout Orientation="Horizontal" IsVisible="{Binding ShowYesNo}">
+            <StackLayout Orientation="Horizontal" 
+                         IsVisible="{Binding ShowYesNo}">
                 <Label Text="Turpināsim?" VerticalOptions="Center" Margin="10"/>
 
-                <Button Text="Jā" WidthRequest="80" Margin="10">
-                    <Button.Behaviors>
-                        <behaviors:EventHandlerBehavior EventName="Clicked">
-                            <behaviors:InvokeMethodAction TargetObject="{Binding}" MethodName="OnBtYesClicked" />
-                        </behaviors:EventHandlerBehavior>
-                    </Button.Behaviors>
+                <Button Text="Jā" 
+                        Command="{Binding BtYesClickedCommand}"
+                        WidthRequest="80" 
+                        Margin="10">
                 </Button>
 
-                <Button Text="Nē" WidthRequest="80" Margin="10">
-                    <Button.Behaviors>
-                        <behaviors:EventHandlerBehavior EventName="Clicked">
-                            <behaviors:InvokeMethodAction TargetObject="{Binding}" MethodName="OnBtNoClicked" />
-                        </behaviors:EventHandlerBehavior>
-                    </Button.Behaviors>
+                <Button Text="Nē" 
+                        Command="{Binding BtNoClickedCommand}"
+                        WidthRequest="80" 
+                        Margin="10">
                 </Button>
 
             </StackLayout>
@@ -80,4 +74,6 @@
         </StackLayout>
 
     </ContentPage.Content>
+    
+
 </ContentPage>
