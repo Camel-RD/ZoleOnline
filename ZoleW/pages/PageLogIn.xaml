@@ -1,0 +1,115 @@
+﻿<Page x:Class="ZoleW.PageLogIn"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:ZoleW"
+      mc:Ignorable="d" 
+      xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+      d:DesignHeight="400" d:DesignWidth="800"
+      Title="Pierakstīties serverī"
+      d:DataContext="{Binding Source={x:Static local:LogInPageVM.ST}}">
+
+    <Page.Resources>
+        <ResourceDictionary>
+            <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
+                <Setter Property="FontSize" Value="20"/>
+                <Setter Property="FontFamily" Value="Microsoft Sans Serif"/>
+                <Setter Property="Controls:ControlsHelper.ContentCharacterCasing" Value="Normal"/>
+                <Setter Property="Padding" Value="8,5,8,5"/>
+            </Style>
+            <Style TargetType="{x:Type TextBlock}">
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="FontSize" Value="18"/>
+            </Style>
+            <Style TargetType="{x:Type TextBox}">
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="FontSize" Value="18"/>
+                <Setter Property="HorizontalAlignment" Value="Left"/>
+            </Style>
+        </ResourceDictionary>
+    </Page.Resources>
+
+    <Grid>
+
+        <WrapPanel Orientation="Horizontal" 
+                        HorizontalAlignment="Center" 
+                        VerticalAlignment="Center">
+
+            <StackPanel Margin="40">
+                <Label Padding="0">Tavs vārds:</Label>
+                <TextBox Width="150" 
+                         Margin="0,0,0,4"
+                         
+                         Text="{Binding Name, Mode=TwoWay}">
+                </TextBox>
+                <Label Padding="0" Margin="0,10,0,0">Parole:</Label>
+                <TextBox Width="150" 
+                         Margin="0,0,0,4"
+                         Text="{Binding Psw, Mode=TwoWay}">
+                </TextBox>
+            </StackPanel>
+
+            <StackPanel Orientation="Vertical" Margin="40">
+
+                <Button Margin="0,0,0,0" 
+                            Content="Ieiet">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <i:CallMethodAction  TargetObject="{Binding}" MethodName="OnLogInClick" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+
+                <Button Margin="0,20,0,0" 
+                            Content="Ieiet kā viesis">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <i:CallMethodAction  TargetObject="{Binding}" MethodName="OnLogInAsGuestClick" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+
+                <Button Margin="0,20,0,0" 
+                            Content="Reģistrēties">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <i:CallMethodAction  TargetObject="{Binding}" MethodName="OnRegisterClick" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <Button Margin="0,20,0,0" 
+                            Content="Atcelt">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="Click">
+                                <i:CallMethodAction  TargetObject="{Binding}" MethodName="OnCancelClick" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </Button>
+
+                    <Button Margin="10,20,0,0" 
+                            Content="?"
+                            Grid.Column="1">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="Click">
+                                <i:CallMethodAction  TargetObject="{Binding}" MethodName="OnHelpClick" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </Button>
+
+                </Grid>
+            </StackPanel>
+
+        </WrapPanel>
+
+    </Grid>
+</Page>

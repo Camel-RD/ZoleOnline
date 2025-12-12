@@ -1,0 +1,74 @@
+﻿<Page x:Class="ZoleW.PageNewGame"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+      xmlns:local="clr-namespace:ZoleW"
+      mc:Ignorable="d" 
+      d:DesignHeight="400" d:DesignWidth="800"
+      Title="Gaidam spēlētājus"
+      d:DataContext="{Binding Source={x:Static local:NewGamePageVM.ST}}">
+
+    <Page.Resources>
+        <ResourceDictionary>
+            <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
+                <Setter Property="FontSize" Value="20"/>
+                <Setter Property="FontFamily" Value="Microsoft Sans Serif"/>
+                <Setter Property="Controls:ControlsHelper.ContentCharacterCasing" Value="Normal"/>
+                <Setter Property="Padding" Value="8,5,8,5"/>
+            </Style>
+            <Style TargetType="{x:Type TextBlock}">
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="FontSize" Value="18"/>
+            </Style>
+            <Style TargetType="{x:Type TextBox}">
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="FontSize" Value="18"/>
+            </Style>
+        </ResourceDictionary>
+    </Page.Resources>
+
+
+    <Canvas>
+
+        <StackPanel Canvas.Left="234" Canvas.Top="60">
+            <Label Background="#404040" 
+                   Margin="0,0,0,10" 
+                   HorizontalAlignment="Stretch"
+                   HorizontalContentAlignment="Center">
+                Spēlētāji:
+            </Label>
+            <Border BorderBrush="White" BorderThickness="1">
+                <ItemsControl x:Name="PlayersList" 
+                          ItemsSource="{Binding Path=Players}" 
+                          Canvas.Left="216" Canvas.Top="84" Height="200">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Vertical" Margin="0" VerticalAlignment="Top"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
+                                <Label Content="{Binding Path=Name}" Width="150"/>
+                                <Label Content="{Binding Path=ExtraInfo}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Border>
+            <Button Margin="20,10,20,0" 
+                    Content="Atcelt"
+                    HorizontalAlignment="Right">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <i:CallMethodAction  TargetObject="{Binding}" MethodName="OnBtCancelClick" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Button>
+
+        </StackPanel>
+    </Canvas>
+</Page>

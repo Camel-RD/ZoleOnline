@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZoleX", "ZoleX\ZoleX.csproj
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "ZoleServerCore", "ZoleServerCore\ZoleServerCore.fsproj", "{1B99CE54-D868-DE2F-897E-358E13786F39}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZoleW", "ZoleW\ZoleW.csproj", "{42B8DFDD-7B95-4D7A-921D-FF05E67AC81B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,10 +32,15 @@ Global
 		{BB66351A-98F7-BDA9-EB5D-A948BDCAC9DD}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
 		{BB66351A-98F7-BDA9-EB5D-A948BDCAC9DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BB66351A-98F7-BDA9-EB5D-A948BDCAC9DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB66351A-98F7-BDA9-EB5D-A948BDCAC9DD}.Release|Any CPU.Deploy.0 = Release|Any CPU
 		{1B99CE54-D868-DE2F-897E-358E13786F39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1B99CE54-D868-DE2F-897E-358E13786F39}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1B99CE54-D868-DE2F-897E-358E13786F39}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1B99CE54-D868-DE2F-897E-358E13786F39}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42B8DFDD-7B95-4D7A-921D-FF05E67AC81B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42B8DFDD-7B95-4D7A-921D-FF05E67AC81B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42B8DFDD-7B95-4D7A-921D-FF05E67AC81B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42B8DFDD-7B95-4D7A-921D-FF05E67AC81B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

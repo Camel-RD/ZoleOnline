@@ -1,0 +1,110 @@
+﻿<Controls:MetroWindow x:Class="ZoleW.MessageBoxWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:local="clr-namespace:ZoleW"
+        mc:Ignorable="d"
+        ShowMaxRestoreButton="False" 
+        ShowMinButton="False"
+        ResizeMode="NoResize"
+        Height="200" Width="400"
+        FontSize="15"
+        SizeToContent="WidthAndHeight"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}"
+        Title="{Binding Path=MyTitle}">
+
+    <Controls:MetroWindow.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Icons.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
+                <Setter Property="FontSize" Value="20"/>
+                <Setter Property="FontFamily" Value="Microsoft Sans Serif"/>
+                <Setter Property="Controls:ControlsHelper.ContentCharacterCasing" Value="Normal"/>
+                <Setter Property="HorizontalAlignment" Value="Right"/>
+                <Setter Property="Padding" Value="8,5,8,5"/>
+                <Setter Property="Margin" Value="10,20,10,10"/>
+            </Style>
+
+            <Style TargetType="{x:Type TextBlock}">
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="FontSize" Value="20"/>
+            </Style>
+
+            <Style x:Key="ImRect" TargetType="{x:Type Rectangle}">
+                <Setter Property="Width" Value="40"/>
+                <Setter Property="Height" Value="40"/>
+                <Setter Property="Margin" Value="15"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="Fill" Value="#B0B0B0"/>
+            </Style>
+
+        </ResourceDictionary>
+    </Controls:MetroWindow.Resources>    
+    
+    <StackPanel>
+        <StackPanel Orientation="Horizontal">
+
+            <Rectangle x:Name="imInfo" Style="{StaticResource ImRect}">
+                <Rectangle.OpacityMask>
+                    <VisualBrush Stretch="Fill"
+                             Visual="{DynamicResource information}" />
+                </Rectangle.OpacityMask>
+            </Rectangle>
+
+            <Rectangle x:Name="imHelp" Style="{StaticResource ImRect}">
+                <Rectangle.OpacityMask>
+                    <VisualBrush Stretch="Fill"
+                             Visual="{DynamicResource help_circle}" />
+                </Rectangle.OpacityMask>
+            </Rectangle>
+
+            <Rectangle x:Name="imAlert" Style="{StaticResource ImRect}">
+                <Rectangle.OpacityMask>
+                    <VisualBrush Stretch="Fill"
+                             Visual="{DynamicResource alert_circle}" />
+                </Rectangle.OpacityMask>
+            </Rectangle>
+
+
+            <TextBlock MaxWidth="700" 
+                       TextWrapping="Wrap" 
+                       Padding="15"
+                       FontFamily="Verdana"
+                       VerticalAlignment="Center"
+                       Text="{Binding Path=Message}" />
+
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button x:Name="btOK"
+                Content="OK"
+                IsDefault="True"
+                Click="btOK_Click">
+            </Button>
+
+            <Button x:Name="btYes"
+                Content="Jā"
+                IsDefault="True"
+                Click="btYes_Click">
+            </Button>
+            
+            <Button x:Name="btNo"
+                Content="Nē"
+                Click="btYes_Click">
+                
+            </Button>
+
+            <Button x:Name="btCancel"
+                Content="Atcelt"
+                IsCancel="True">
+                
+            </Button>
+
+        </StackPanel>
+    </StackPanel>
+</Controls:MetroWindow>

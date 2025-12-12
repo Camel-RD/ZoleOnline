@@ -1,22 +1,25 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading;
+using System.Windows.Threading;
 using System.Threading.Tasks;
 using GameLib;
 using System.Collections.Immutable;
-using Zole3.Pages;
-using Zole3.Models;
+using System.Windows;
+using Microsoft.Win32;
 
-namespace Zole3
+namespace ZoleW
 {
     public class GameController : IGameForm
     {
-        private App App;
+        private MainWindow MainWindow = null;
         private PageStartUp PageStartUp = null;
         private PageSettings PageSettings = null;
         private PageLogIn PageLogIn = null;
         private PageRegHelp PageRegHelp = null;
         private PageLobby PageLobby = null;
-        private PagePlayerList PagePlayerList = null;
         private PageCalendar PageCalendar = null;
         private PageRegister PageRegister = null;
         private PageRegister2 PageRegister2 = null;
@@ -26,6 +29,7 @@ namespace Zole3
         private PagePoints PagePoints = null;
         private PageWait PageWait = null;
 
+        private CardImages CardImages = null;
         private StartUpPageVM StartUpPageVM = null;
         private SettingsPageVM SettingsPageVM = null;
         private LogInPageVM LogInPageVM = null;
@@ -43,6 +47,7 @@ namespace Zole3
         public IUIToClient ToClient = null;
 
         private string[] PlayerNames = new string[3];
+        
         private int LocalPlayerNr = 0;
         private int NextPlayerNr => LocalPlayerNr < 2 ? LocalPlayerNr + 1 : 0;
         private int PriorPlayerNr => LocalPlayerNr > 0 ? LocalPlayerNr - 1 : 2;
@@ -50,7 +55,7 @@ namespace Zole3
 
         public int myPlayerNr = -1;
         private bool isClosing = false;
-        
+
         private bool IsOnlineGame { get; set; } = false;
 
         private string UserName = "";
@@ -60,6 +65,13 @@ namespace Zole3
         private bool HideOnlineGameButton = false;
         private string ServerIp = "";
         private string ServerPort = "";
+
+
+        private double GamePageNormalHeight = 370;
+        private double GamePageFullHeight = 590;
+
+        private double MainWindowNormalHeight = 390d * Locator.Scale;
+        private double MainWindowFullHeight = 610d * Locator.Scale;
 
         public enum EState
         {
@@ -72,16 +84,16 @@ namespace Zole3
         private int selectedCard1 = -1;
         private int selectedCard2 = -1;
 
-        public GameController(App app)
+        public GameController(MainWindow mainWindow)
         {
-            App = app;
+            MainWindow = mainWindow;
+            CardImages = new CardImages();
 
             GamePage = new PageGame();
             PagePoints = new PagePoints();
             PageStartUp = new PageStartUp();
             PageSettings = new PageSettings();
             PageLogIn = new PageLogIn();
-            PagePlayerList = new PagePlayerList();
             PageCalendar = new PageCalendar();
             PageRegHelp = new PageRegHelp();
             PageRegister = new PageRegister();
@@ -91,38 +103,36 @@ namespace Zole3
             PageNewPrivateGame = new PageNewPrivateGame();
             PageWait = new PageWait();
 
-            StartUpPageVM = StartUpPageVM.ST;
-            SettingsPageVM = SettingsPageVM.ST;
-            LogInPageVM = LogInPageVM.ST;
-            RegisterPageVM = RegisterPageVM.ST;
-            LobbyPageVM = LobbyPageVM.ST;
-            CalendarPageVM = CalendarPageVM.ST;
-            NewGamePageVM = NewGamePageVM.ST;
-            NewPrivateGamePageVM = NewPrivateGamePageVM.ST;
-            GamePageVM = GamePageVM.ST;
-            PointsPageVM = PointsPageVM.DTST;
-            WaititngPageVM = WaititngPageVM.ST;
+            StartUpPageVM = new StartUpPageVM();
+            SettingsPageVM = new SettingsPageVM();
+            LogInPageVM = new LogInPageVM();
+            RegisterPageVM = new RegisterPageVM();
+            LobbyPageVM = new LobbyPageVM();
+            CalendarPageVM = new CalendarPageVM();
+            NewGamePageVM = new NewGamePageVM();
+            NewPrivateGamePageVM = new NewPrivateGamePageVM();
+            GamePageVM = new GamePageVM(CardImages);
+            PointsPageVM = new PointsPageVM();
+            WaititngPageVM = new WaititngPageVM();
 
+            PageStartUp.DataContext = StartUpPageVM;
+            PageSettings.DataContext = SettingsPageVM;
+            PageLogIn.DataContext = LogInPageVM;
+            PageRegHelp.DataContext = LogInPageVM;
+            PageRegister.DataContext = RegisterPageVM;
+            PageRegister2.DataContext = RegisterPageVM;
+            PageLobby.DataContext = LobbyPageVM;
+            PageCalendar.DataContext = CalendarPageVM;
+            PageNewGame.DataContext = NewGamePageVM;
+            PageNewPrivateGame.DataContext = NewPrivateGamePageVM;
+            GamePage.DataContext = GamePageVM;
+            PagePoints.DataContext = PointsPageVM;
+            PageWait.DataContext = WaititngPageVM;
 
-            PageStartUp.BindingContext = StartUpPageVM;
-            PageSettings.BindingContext = SettingsPageVM;
-            PageLogIn.BindingContext = LogInPageVM;
-            PageRegHelp.BindingContext = LogInPageVM;
-            PageRegister.BindingContext = RegisterPageVM;
-            PageRegister2.BindingContext = RegisterPageVM;
-            PageLobby.BindingContext = LobbyPageVM;
-            PagePlayerList.BindingContext = LobbyPageVM;
-            PageCalendar.BindingContext = CalendarPageVM;
-            PageNewGame.BindingContext = NewGamePageVM;
-            PageNewPrivateGame.BindingContext = NewPrivateGamePageVM;
-            GamePage.BindingContext = GamePageVM;
-            PagePoints.BindingContext = PointsPageVM;
-            PageWait.BindingContext = WaititngPageVM;
 
             StartUpPageVM.Started += StartUpPageVM_Started;
             StartUpPageVM.BtPlayOnlineClicked += StartUpPageVM_BtPlayOnlineClicked;
             StartUpPageVM.BtSettingsClicked += StartUpPageVM_BtSettingsClicked;
-            StartUpPageVM.BtExitClicked += StartUpPageVM_BtExitClicked;
 
             SettingsPageVM.BtOkClicked += SettingsPageVM_BtOkClicked;
 
@@ -132,17 +142,15 @@ namespace Zole3
             LogInPageVM.BtHelpClicked += LogInPageVM_BtHelpClicked;
             LogInPageVM.BtCloeseHelpClicked += LogInPageVM_BtCloeseHelpClicked;
             LogInPageVM.BtLogInAsGuestClicked += LogInPageVM_BtLogInAsGuestClicked;
-
+            
             RegisterPageVM.BtCancelClicked += RegisterPageVM_BtCancelClicked;
             RegisterPageVM.BtGetCodeClicked += RegisterPageVM_BtGetCodeClicked;
             RegisterPageVM.BtRegisterClicked += RegisterPageVM_BtRegisterClicked;
 
-            LobbyPageVM.BtExitClicked += LobbyPageVM_BtExitClicked;
+            LobbyPageVM.BtBtExitClicked += LobbyPageVM_BtBtExitClicked;
             LobbyPageVM.BtJoinGameClicked += LobbyPageVM_BtJoinGameClicked;
             LobbyPageVM.BtCalendarClicked += LobbyPageVM_BtCalendarClicked;
             LobbyPageVM.BtJoinPrivateGameClicked += LobbyPageVM_BtJoinPrivateGameClicked;
-            LobbyPageVM.BtListPlayersClicked += LobbyPageVM_BtListPlayersClicked;
-            LobbyPageVM.BtBackFromListClicked += LobbyPageVM_BtBackFromListClicked;
 
             CalendarPageVM.BtSendDataClicked += CalendarPageVM_BtSendDataClicked;
             CalendarPageVM.BtBackClick += CalendarPageVM_BtBackClick;
@@ -156,20 +164,19 @@ namespace Zole3
             GamePageVM.YesNoZoleClick += Game_YesNoZoleClick;
             GamePageVM.CardClicked += Game_CardClicked;
             GamePageVM.DebugModeChanged += Game_DebugModeChanged;
-
+            
             PointsPageVM.BtGoClicked += Game_BtGoClicked;
             PointsPageVM.BtYesClicked += PointsPageVM_BtYesClicked;
             PointsPageVM.BtNoClicked += PointsPageVM_BtNoClicked;
 
             GamePageVM.IsInDegugMode = false;
+            GamePageVM.IsDebugPromptVisible = Properties.Settings.Default.ShowDebugPrompt;
+
+            GamePage.Height = GamePageNormalHeight;
+            MainWindow.Height = MainWindowNormalHeight;
+            MainWindow.Width = 820d * Locator.Scale;
 
             Init();
-        }
-
-        public Page MainPage
-        {
-            get => App.Windows[0].Page;
-            set => App.Windows[0].Page = value;
         }
 
         void Init()
@@ -187,7 +194,7 @@ namespace Zole3
             if (string.IsNullOrEmpty(UserName)) UserName = "Es";
             StartUpPageVM.PlayerName = UserName;
             StartUpPageVM.ShowOnlineGame = !HideOnlineGameButton;
-            if (string.IsNullOrEmpty(ServerIp)) ServerIp = "localhost";
+            if (string.IsNullOrEmpty(ServerIp)) ServerIp = "klons.id.lv";
             if (string.IsNullOrEmpty(ServerPort)) ServerPort = "7777";
 
             var gameformwrapped = GameFormWrapper.GetGUIWrapper(this);
@@ -198,7 +205,7 @@ namespace Zole3
 
             StartGame();
 
-            MainPage = PageStartUp;
+            MainWindow.Content = PageStartUp;
         }
 
         void PlayOfflineGame()
@@ -206,16 +213,14 @@ namespace Zole3
             UserName = StartUpPageVM.PlayerName;
             WriteToRegistry();
             LocalPlayerNr = 0;
-            PlayerNames = [ UserName, "Askolds", "Haralds" ];
+            PlayerNames = new[] { UserName, "Askolds", "Haralds" };
 
             GamePageVM.PlayerName1 = PlayerNames[NextPlayerNr];
             GamePageVM.PlayerName2 = PlayerNames[LocalPlayerNr];
             GamePageVM.PlayerName3 = PlayerNames[PriorPlayerNr];
-            PointsPageVM.PlayerName1 = PlayerNames[0];
-            PointsPageVM.PlayerName2 = PlayerNames[1];
-            PointsPageVM.PlayerName3 = PlayerNames[2];
+            PagePoints.SetNames(PlayerNames[0], PlayerNames[1], PlayerNames[2]);
 
-            MainPage = GamePage;
+            MainWindow.Content = GamePage;
             IsOnlineGame = false;
             ToClient.PlayOffline(UserName);
         }
@@ -223,18 +228,12 @@ namespace Zole3
         public void DoOnGameClosing()
         {
             WriteToRegistry();
-            //ToClient?.AppClosing();
-        }
-
-        public void ShowMessage(string msg)
-        {
-            MainPage?.DisplayAlert("", msg, "OK");
+            ToClient?.AppClosing();
         }
 
         private void StartUpPageVM_Started(object sender, StringEventArgs e)
         {
             var playername = e.EventData;
-            
             if (string.IsNullOrEmpty(playername))
             {
                 ShowMessage("Jānorāda vārds!");
@@ -251,7 +250,7 @@ namespace Zole3
         private void StartUpPageVM_BtPlayOnlineClicked(object sender, EventArgs e)
         {
             UserName = StartUpPageVM.PlayerName;
-            if (string.IsNullOrEmpty(ServerIp) || string.IsNullOrEmpty(ServerPort))
+            if(string.IsNullOrEmpty(ServerIp) || string.IsNullOrEmpty(ServerPort))
             {
                 ShowMessage("Nav norādīta servera IP adrese un ports");
                 return;
@@ -272,13 +271,7 @@ namespace Zole3
             SettingsPageVM.ServerIp = ServerIp;
             SettingsPageVM.ServerPort = ServerPort;
 
-            MainPage = PageSettings;
-        }
-
-        private void StartUpPageVM_BtExitClicked(object sender, EventArgs e)
-        {
-            WriteToRegistry();
-            App.Quit();
+            MainWindow.Content = PageSettings;
         }
 
         private void SettingsPageVM_BtOkClicked(object sender, EventArgs e)
@@ -296,27 +289,27 @@ namespace Zole3
                 HideOnlineGameButton = SettingsPageVM.HideOnlineGameButton;
                 ServerIp = SettingsPageVM.ServerIp;
                 ServerPort = SettingsPageVM.ServerPort;
-
+                
                 WriteToRegistry();
                 StartUpPageVM.ShowOnlineGame = !HideOnlineGameButton;
             }
-            MainPage = PageStartUp;
+            MainWindow.Content = PageStartUp;
         }
 
         private void LogInPageVM_BtCancelClicked(object sender, EventArgs e)
         {
             ToClient.Disconnect();
-            MainPage = PageStartUp;
+            MainWindow.Content = PageStartUp;
         }
 
         private void LogInPageVM_BtCloeseHelpClicked(object sender, EventArgs e)
         {
-            MainPage = PageLogIn;
+            MainWindow.Content = PageLogIn;
         }
 
         private void LogInPageVM_BtHelpClicked(object sender, EventArgs e)
         {
-            MainPage = PageRegHelp;
+            MainWindow.Content = PageRegHelp;
         }
 
         private void LogInPageVM_BtRegisterClicked(object sender, EventArgs e)
@@ -324,9 +317,9 @@ namespace Zole3
             string name = LogInPageVM.Name;
             RegisterPageVM.Name = name;
             if (AppClient.UseEmailValidation)
-                MainPage = PageRegister;
+                MainWindow.Content = PageRegister;
             else
-                MainPage = PageRegister2;
+                MainWindow.Content = PageRegister2;
         }
 
         private void LogInPageVM_BtLogInClicked(object sender, EventArgs e)
@@ -345,13 +338,12 @@ namespace Zole3
             }
             UserName = name;
             UserPsw = psw;
-            WriteToRegistry();
             ToClient.LogIn(name, psw);
         }
         private void LogInPageVM_BtLogInAsGuestClicked(object sender, EventArgs e)
         {
             string name = LogInPageVM.Name;
-            if (string.IsNullOrEmpty(name))
+            if (string.IsNullOrEmpty(name) )
             {
                 ShowMessage("Jānorāda lietāja vārds");
                 return;
@@ -362,7 +354,6 @@ namespace Zole3
                 return;
             }
             UserName = name;
-            WriteToRegistry();
             ToClient.LogInAsGuest(name);
         }
 
@@ -396,7 +387,6 @@ namespace Zole3
             }
             UserName = name;
             UserPsw = psw;
-            WriteToRegistry();
             ToClient.Register(name, psw, regcode);
         }
 
@@ -433,13 +423,13 @@ namespace Zole3
         private void RegisterPageVM_BtCancelClicked(object sender, EventArgs e)
         {
             ToClient.Disconnect();
-            App.Windows[0].Page = PageStartUp;
+            MainWindow.Content = PageStartUp;
         }
 
-        private void LobbyPageVM_BtExitClicked(object sender, EventArgs e)
+        private void LobbyPageVM_BtBtExitClicked(object sender, EventArgs e)
         {
             ToClient.Disconnect();
-            MainPage = PageStartUp;
+            MainWindow.Content = PageStartUp;
         }
 
         private void LobbyPageVM_BtJoinGameClicked(object sender, EventArgs e)
@@ -449,17 +439,7 @@ namespace Zole3
 
         private void LobbyPageVM_BtJoinPrivateGameClicked(object sender, EventArgs e)
         {
-            MainPage = PageNewPrivateGame;
-        }
-
-        private void LobbyPageVM_BtBackFromListClicked(object sender, EventArgs e)
-        {
-            MainPage = PageLobby;
-        }
-
-        private void LobbyPageVM_BtListPlayersClicked(object sender, EventArgs e)
-        {
-            MainPage = PagePlayerList;
+            MainWindow.Content = PageNewPrivateGame;
         }
 
         private void CalendarPageVM_GetUserListClicked(object sender, StringEventArgs e)
@@ -470,14 +450,14 @@ namespace Zole3
 
         private void CalendarPageVM_BtBackClick(object sender, EventArgs e)
         {
-            MainPage = PageLobby;
+            MainWindow.Content = PageLobby;
         }
 
         private void CalendarPageVM_BtSendDataClicked(object sender, StringEventArgs e)
         {
             if (string.IsNullOrEmpty(e.EventData)) return;
             ToClient.SetCalendarData(e.EventData);
-            MainPage = PageLobby;
+            MainWindow.Content = PageLobby;
         }
 
         private void LobbyPageVM_BtCalendarClicked(object sender, EventArgs e)
@@ -509,14 +489,28 @@ namespace Zole3
 
         private void NewPrivateGamePageVM_BtCancelClicked(object sender, EventArgs e)
         {
-            MainPage = PageLobby;
+            MainWindow.Content = PageLobby;
         }
 
-
+        public void ShowMessage(string msg)
+        {
+            //MainWindow.ShowMessage(msg);
+            //MessageBox.Show(msg);
+            MessageBoxWindow.Show(MainWindow, msg, "Zolīte", MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
 
         private void Game_DebugModeChanged(object sender, EventArgs e)
         {
-
+            if (GamePageVM.IsInDegugMode)
+            {
+                MainWindow.Height = MainWindowFullHeight;
+                GamePage.Height = GamePageFullHeight;
+            }
+            else
+            {
+                GamePage.Height = GamePageFullHeight;
+                MainWindow.Height = MainWindowNormalHeight;
+            }
         }
 
         private void Game_CardClicked(object sender, IntEventArgs e)
@@ -526,7 +520,7 @@ namespace Zole3
 
         private void Game_YesNoZoleClick(object sender, StringEventArgs e)
         {
-            if (e.EventData == "Nē")
+            if(e.EventData == "Nē")
                 ReplyYesNoZole(false, false);
             else if (e.EventData == "Zole")
                 ReplyYesNoZole(true, true);
@@ -545,8 +539,8 @@ namespace Zole3
             {
                 state = EState.none;
                 PointsPageVM.ShowYesNo = false;
-                MainPage = GamePage;
                 ToGame.ReplyStartNewGame(true);
+                MainWindow.Content = GamePage;
                 return;
             }
             throw new Exception("wrong state");
@@ -569,7 +563,6 @@ namespace Zole3
             myPlayerNr = nr;
         }
 
-
         public bool IsClosing()
         {
             return isClosing;
@@ -580,42 +573,33 @@ namespace Zole3
             AppClient.InitAppClient();
         }
 
+
         public void WriteToRegistry()
         {
-
-            Preferences.Set("Name", UserName);
-            Preferences.Set("Psw", UserPsw);
-            Preferences.Set("ShowArrow", ShowArrow ? "Yes" : "No");
-            Preferences.Set("RememberPsw", RememberPsw ? "Yes" : "No");
-            Preferences.Set("HideOnlineBt", HideOnlineGameButton ? "Yes" : "No");
-            Preferences.Set("IP", ServerIp);
-            Preferences.Set("Port", ServerPort);
+            string psw = RememberPsw ? UserPsw : "";
+            RegistryKey regKey;
+            regKey = Registry.CurrentUser.CreateSubKey("Software\\Zole");
+            regKey.SetValue("Name", UserName);
+            regKey.SetValue("Psw", psw);
+            regKey.SetValue("ShowArrow", ShowArrow ? "Yes" : "No");
+            regKey.SetValue("RememberPsw", RememberPsw ? "Yes" : "No");
+            regKey.SetValue("HideOnlineBt", HideOnlineGameButton ? "Yes" : "No");
+            regKey.SetValue("IP", ServerIp);
+            regKey.SetValue("Port", ServerPort);
         }
 
         public void ReadFromRegistry()
         {
-            UserName = "Es";
-            UserPsw = "";
-            ShowArrow = false;
-            RememberPsw = true;
-            HideOnlineGameButton = false;
-            ServerIp = "zole.klons.id.lv";
-            ServerPort = "7777";
-            
-            if (Preferences.ContainsKey("Name"))
-                UserName = Preferences.Get("Name", null);
-            if (Preferences.ContainsKey("Psw"))
-                UserPsw = Preferences.Get("Psw", null);
-            if (Preferences.ContainsKey("ShowArrow"))
-                ShowArrow = Preferences.Get("ShowArrow", "Yes") == "Yes";
-            if (Preferences.ContainsKey("RememberPsw"))
-                RememberPsw = Preferences.Get("RememberPsw", "Yes") == "Yes";
-            if (Preferences.ContainsKey("HideOnlineBt"))
-                HideOnlineGameButton = Preferences.Get("HideOnlineBt", "No") == "Yes";
-            if (Preferences.ContainsKey("IP"))
-                ServerIp = Preferences.Get("IP", null);
-            if (Preferences.ContainsKey("Port"))
-                ServerPort = Preferences.Get("Port", null);
+            RegistryKey regKey;
+            regKey = Registry.CurrentUser.CreateSubKey("Software\\Zole");
+            UserName = regKey.GetValue("Name", "") as string;
+            UserPsw = regKey.GetValue("Psw", "") as string;
+            ShowArrow = (regKey.GetValue("ShowArrow", "") as string) == "Yes";
+            RememberPsw = (regKey.GetValue("RememberPsw", "") as string) == "Yes";
+            HideOnlineGameButton = (regKey.GetValue("HideOnlineBt", "") as string) == "Yes";
+            ServerIp = regKey.GetValue("IP", "") as string;
+            ServerPort = regKey.GetValue("Port", "7777") as string;
+            if (ServerIp == "") ServerIp = Properties.Settings.Default.ServerIp;
         }
 
         public void HideThings()
@@ -668,6 +652,7 @@ namespace Zole3
             state = EState.waitForTickSimple;
             GamePageVM.IsYesNoPanelVisible = false;
             AutoTick();
+
         }
 
         private void AutoTick()
@@ -685,15 +670,14 @@ namespace Zole3
                 {
                     int t = IsOnlineGame ? 1200 : 2000;
                     await Task.Delay(t);
+                    MainWindow.Dispatcher.Invoke(() => { DoOnGO(); });
                     //Device.BeginInvokeOnMainThread(() => { DoOnGO(); });
-                    MainPage.Dispatcher.Dispatch(() => { DoOnGO(); });
                 });
             }
         }
 
         public void AskStartGame()
         {
-            ShowText("Vai sāksim jaunu spēli");
             state = EState.startGame;
             GamePageVM.IsButtonGoVisible = false;
             PointsPageVM.ShowArrow = false;
@@ -710,7 +694,7 @@ namespace Zole3
             GamePageVM.IsButtonZoleVisible = false;
             PointsPageVM.ShowYesNo = false;
             ShowText("");
-            MainPage = GamePage;
+            MainWindow.Content = GamePage;
         }
 
         public void ReplyYesNoZole(bool yesno, bool zole)
@@ -725,11 +709,6 @@ namespace Zole3
             if (state == EState.startGame)
             {
                 state = EState.none;
-                if(!yesno && !IsOnlineGame)
-                {
-                    App.Quit();
-                    return;
-                }
                 ToGame.ReplyStartNewGame(yesno);
                 return;
             }
@@ -896,7 +875,7 @@ namespace Zole3
         public string GetCardImageName(CardValue cardvalue, CardSuit suit)
         {
             string s1 = "";
-            switch(suit)
+            switch (suit)
             {
                 case CardSuit.Club: s1 = "c"; break;
                 case CardSuit.Diamond: s1 = "d"; break;
@@ -904,7 +883,7 @@ namespace Zole3
                 case CardSuit.Spade: s1 = "s"; break;
             };
             string s2 = "";
-                 switch(cardvalue)
+            switch (cardvalue)
             {
                 case CardValue.Ace: s2 = "1"; break;
                 case CardValue.Jack: s2 = "j"; break;
@@ -927,8 +906,8 @@ namespace Zole3
                 throw new ArgumentOutOfRangeException("col");
             if (row == ECardRow.CardsOnDesk) return GamePageVM.CardsOnDesk[col];
             if (row == ECardRow.Cards1) return GamePageVM.Cards[col];
-            if (row == ECardRow.Cards2) return null;
-            if (row == ECardRow.Cards3) return null;
+            if (row == ECardRow.Cards2) return GamePageVM.Cards2[col];
+            if (row == ECardRow.Cards3) return GamePageVM.Cards3[col];
             return null;
         }
 
@@ -963,9 +942,9 @@ namespace Zole3
 
             UserCards = playerCards[0];
 
-            if (firstPlayerNr == localplayernr) cnrs = [ 1, 0, 2 ];
-            else if (firstPlayerNr == GetPriorPlayerNr(localplayernr)) cnrs = [ 2, 1, 0 ];
-            else if (firstPlayerNr == GetNextPlayerNr(localplayernr)) cnrs = [ 0, 2, 1 ];
+            if (firstPlayerNr == localplayernr) cnrs = new int[3] { 1, 0, 2 };
+            else if (firstPlayerNr == GetPriorPlayerNr(localplayernr)) cnrs = new int[3] { 2, 1, 0 };
+            else if (firstPlayerNr == GetNextPlayerNr(localplayernr)) cnrs = new int[3] { 0, 2, 1 };
 
             n = cardsOnDesk.Cards.Count;
             for (i = 0; i < n; i++)
@@ -1037,10 +1016,7 @@ namespace Zole3
             GamePageVM.PlayerName1 = PlayerNames[0];
             GamePageVM.PlayerName2 = PlayerNames[1];
             GamePageVM.PlayerName3 = PlayerNames[2];
-
-            PointsPageVM.PlayerName1 = plnm1;
-            PointsPageVM.PlayerName2 = plnm2;
-            PointsPageVM.PlayerName3 = plnm3;
+            PagePoints.SetNames(plnm1, plnm2, plnm3);
         }
 
         public void AddRowToStats(int v1, int v2, int v3, int localplayernr)
@@ -1056,28 +1032,27 @@ namespace Zole3
                 //PointsPageVM.ShowArrow = ShowArrow;
                 PointsPageVM.ShowArrow = false;
                 PointsPageVM.ShowYesNo = false;
-                MainPage = PagePoints;
+                MainWindow.Content = PagePoints;
             }
             else
-                MainPage = GamePage;
+                MainWindow.Content = GamePage;
         }
-
 
         public void Wait(string msg)
         {
             WaititngPageVM.ST.Message = msg;
-            MainPage = PageWait;
+            MainWindow.Content = PageWait;
         }
 
         public void DoStartUp()
         {
-            MainPage = PageStartUp;
+            MainWindow.Content = PageStartUp;
         }
 
         public void ConnectionFailed(string msg)
         {
             ShowMessage("Neizdevās pieslēgties serverim\n\n" + msg);
-            MainPage = PageStartUp;
+            MainWindow.Content = PageStartUp;
         }
 
         public void GoToLoginPage()
@@ -1085,12 +1060,12 @@ namespace Zole3
             IsOnlineGame = true;
             LogInPageVM.Name = UserName;
             LogInPageVM.Psw = UserPsw;
-            MainPage = PageLogIn;
+            MainWindow.Content = PageLogIn;
         }
-
+        
         public void GoToRegisterPage()
         {
-            MainPage = PageRegister;
+            MainWindow.Content = PageRegister;
         }
 
         public void ShowMessage2(string msg)
@@ -1101,7 +1076,7 @@ namespace Zole3
         public void GoToLobby()
         {
             PointsPageVM.Clear();
-            MainPage = PageLobby;
+            MainWindow.Content = PageLobby;
         }
 
         public void SetLobbyData(LobbyData data)
@@ -1191,13 +1166,13 @@ namespace Zole3
         public void GoToNewGame()
         {
             NewGamePageVM.Players.Clear();
-            MainPage = PageNewGame;
+            MainWindow.Content = PageNewGame;
         }
 
         public void CancelNewGame(string msg)
         {
             ShowMessage("Spēles sagatavošana pārtraukta");
-            MainPage = PageLobby;
+            MainWindow.Content = PageLobby;
         }
 
         public void GotPlayerForNewGame(string name, string info)
@@ -1219,7 +1194,7 @@ namespace Zole3
         {
             if (string.IsNullOrEmpty(data)) return;
             if (!CalendarPageVM.SetData(data)) return;
-            MainPage = PageCalendar;
+            MainWindow.Content = PageCalendar;
         }
 
         public void CalendarTagData(string data)
@@ -1227,8 +1202,5 @@ namespace Zole3
             if (string.IsNullOrEmpty(data)) return;
             ShowMessage(data);
         }
-
-
-
     }
 }
