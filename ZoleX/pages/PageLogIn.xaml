@@ -1,90 +1,68 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
-             xmlns:i="clr-namespace:Behaviors;assembly=Behaviors"
-             xmlns:local="clr-namespace:ZoleX"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d"
-             BackgroundColor="{DynamicResource PageBackgroundColor}"
-             x:Class="ZoleX.PageLogIn"
-             d:BindingContext="{Binding Source={x:Static local:Locator.LogInPageVM}}">
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:models="clr-namespace:Zole3.Models"
+             xmlns:local="clr-namespace:Zole3"
+             x:Class="Zole3.Pages.PageLogIn"
+             x:DataType="models:LogInPageVM"
+             Title="PageLogIn">
+
     
     <ContentPage.Content>
         <Grid>
-            
+
             <StackLayout VerticalOptions="Center">
 
                 <FlexLayout Wrap="Wrap" 
                             AlignItems="Center" 
                             JustifyContent="Center">
 
-                    <StackLayout Margin="20">
+                    <StackLayout Margin="20,10,20,10">
 
                         <Label Text="Tavs vārds:" Margin="0"/>
-                        <local:MyEntry WidthRequest="200" 
+                        <Entry WidthRequest="200" 
                                    Text="{Binding Name}"/>
 
                         <Label Text="Parole:" Margin="0,20,0,0"/>
-                        <local:MyEntry WidthRequest="200" 
+                        <Entry WidthRequest="200"
                                    Text="{Binding Psw}"/>
 
                     </StackLayout>
 
                     <StackLayout WidthRequest="200"
                              MinimumWidthRequest="200"
-                             Margin="20">
+                             Margin="20,10,20,10">
 
                         <Button Text="Ieiet" 
-                                HorizontalOptions="FillAndExpand"
+                                HorizontalOptions="Fill"
+                                Command="{Binding LogInClickCommand}"
                                 Margin="0,0,0,0">
-                            <Button.Behaviors>
-                                <i:EventHandlerBehavior EventName="Clicked">
-                                    <i:InvokeMethodAction TargetObject="{Binding}" MethodName="OnLogInClick" />
-                                </i:EventHandlerBehavior>
-                            </Button.Behaviors>
                         </Button>
 
                         <Button Text="Ieiet kā viesis" 
-                        Margin="0,20,0,0">
-
-                            <Button.Behaviors>
-                                <i:EventHandlerBehavior EventName="Clicked">
-                                    <i:InvokeMethodAction TargetObject="{Binding}" MethodName="OnLogInAsGuestClick" />
-                                </i:EventHandlerBehavior>
-                            </Button.Behaviors>
+                                Command="{Binding LogInAsGuestClickCommand}"
+                                Margin="0,20,0,0">
                         </Button>
 
                         <Button Text="Reģistrēties" 
-                        Margin="0,20,0,0">
-                            <Button.Behaviors>
-                                <i:EventHandlerBehavior EventName="Clicked">
-                                    <i:InvokeMethodAction TargetObject="{Binding}" MethodName="OnRegisterClick" />
-                                </i:EventHandlerBehavior>
-                            </Button.Behaviors>
+                                Command="{Binding RegisterClickCommand}"
+                                Margin="0,20,0,0">
                         </Button>
 
                         <StackLayout Orientation="Horizontal" Margin="0,20,0,0">
 
                             <Button Text="Atcelt" 
                                     HorizontalOptions="FillAndExpand"
+                                    Command="{Binding CancelClickCommand}"
                                     Margin="0,0,0,0">
-                                <Button.Behaviors>
-                                    <i:EventHandlerBehavior EventName="Clicked">
-                                        <i:InvokeMethodAction TargetObject="{Binding}" MethodName="OnCancelClick" />
-                                    </i:EventHandlerBehavior>
-                                </Button.Behaviors>
                             </Button>
 
                             <Button Text="?" 
                                     HorizontalOptions="End"
                                     WidthRequest="50"
+                                    Command="{Binding HelpClickCommand}"
                                     Margin="10,0,0,0">
-                                <Button.Behaviors>
-                                    <i:EventHandlerBehavior EventName="Clicked">
-                                        <i:InvokeMethodAction TargetObject="{Binding}" MethodName="OnHelpClick" />
-                                    </i:EventHandlerBehavior>
-                                </Button.Behaviors>
                             </Button>
 
 
@@ -95,6 +73,7 @@
                 </FlexLayout>
             </StackLayout>
         </Grid>
-        
+
     </ContentPage.Content>
+    
 </ContentPage>

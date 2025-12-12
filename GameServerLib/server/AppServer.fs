@@ -26,17 +26,37 @@ type private ServerStateVar = {
     Flag : StateVarFlag} with
     member x.ShouldExit() = x.Flag <> StateVarFlag.OK
 
+type ServerOptions = {
+    Port : int
+    DataFolder : string
+    AddHours : int
+    EmailServerAddr : string
+    EmailServerPort : int
+    EmailFrom : string
+    EmailFromName : string
+    EmailServerPsw : string
+    UseEmailValidation : bool} with
+    static member Empty : ServerOptions = {
+        Port = 7777
+        DataFolder = ""
+        AddHours = 0
+        EmailServerAddr = ""
+        EmailServerPort = 0
+        EmailFrom = ""
+        EmailFromName = ""
+        EmailServerPsw = ""
+        UseEmailValidation = false
+    }
 
-type AppServer(port, datafolder, addhours, emailserveraddr, emailserverport, 
-        emailfrom, emailfromname, emailserverpsw : string) as this =
+type AppServer(options : ServerOptions) as this =
     let MailBox = new AutoCancelAgent<MsgToServer>(this.DoInbox)
     let RawUserId_Generator = IdGenerator(0)
     let GameId_Generator = IdGenerator(0)
     let rnd = Random()
     let InitState = ServerState.Init
     static let mutable _AddHours = 0
-    do _AddHours <- addhours
-    let RealDate() = DateTime.Now.AddHours(float addhours).Date
+    do _AddHours <- options.AddHours
+    let RealDate() = DateTime.Now.AddHours(float options.AddHours).Date
 
     let AppUserData = UserDataRepository()
     let AppOnlineUserData = Dictionary<int,OnlineUserData>()
@@ -46,7 +66,7 @@ type AppServer(port, datafolder, addhours, emailserveraddr, emailserverport,
     let ftakemsgfromlistener (msg : MsgListenerToServer) =
         MsgToServer.FromListener msg |> this.TakeMessage
     
-    let Listener = ServerListener(port, ftakemsgfromlistener)
+    let Listener = ServerListener(options.Port, ftakemsgfromlistener)
 
 
     let mutable _CountNewConnections = 0
@@ -81,7 +101,7 @@ type AppServer(port, datafolder, addhours, emailserveraddr, emailserverport,
     let Lobby = new Lobby()
 
     let DataFolder = 
-        if datafolder <> "" then datafolder
+        if options.DataFolder <> "" then options.DataFolder
         else
         let mydirinfo =  
             Assembly.GetEntryAssembly().Location
@@ -108,7 +128,7 @@ type AppServer(port, datafolder, addhours, emailserveraddr, emailserverport,
         rex_email.IsMatch(email)
 
     static member AddHours = _AddHours
-
+    
     member val To = _To
 
     member x.Start() = 
@@ -130,17 +150,17 @@ type AppServer(port, datafolder, addhours, emailserveraddr, emailserverport,
     }
 
     member private x.SendMail (addr : string, code:string) =
-        if addr = "" || emailserveraddr = "" || emailfrom = "" then ()
+        if addr = "" || options.EmailServerAddr = "" || options.EmailFrom = "" then ()
         else
         let task () = 
             let msg = new MailMessage()
-            msg.From <- MailAddress(emailfrom, emailfromname)
+            msg.From <- MailAddress(options.EmailFrom, options.EmailFromName)
             msg.To.Add(addr)
             msg.Subject <- "Tavs reģistrācijas kods"
             msg.Body <- "Tavs reģistrācijas kods Zolītes serverī: " + code
-            let SmtpServer = new SmtpClient(emailserveraddr)
-            SmtpServer.Port <- emailserverport
-            SmtpServer.Credentials <- new System.Net.NetworkCredential(emailfrom, emailserverpsw);
+            let SmtpServer = new SmtpClient(options.EmailServerAddr)
+            SmtpServer.Port <- options.EmailServerPort
+            SmtpServer.Credentials <- new System.Net.NetworkCredential(options.EmailFrom, options.EmailServerPsw);
             SmtpServer.Send(msg)
             Logger.WriteLine("Sent code:{0} to {1}", code, addr)
         let task_async = async{
@@ -159,7 +179,7 @@ type AppServer(port, datafolder, addhours, emailserveraddr, emailserverport,
          _CountNewGames)
 
     member private x.AddNewConnection (state : ServerState) (connection : ServerConnection) =
-        let new_user = new User(_FromUser, connection)
+        let new_user = new User(_FromUser, connection, options.UseEmailValidation)
         let new_rawid = RawUserId_Generator.GetNext()
         let new_oud = OnlineUserData(new_user)
         new_oud.Location <- UserLocation.Raw
@@ -201,6 +221,11 @@ type AppServer(port, datafolder, addhours, emailserveraddr, emailserverport,
             (name : string) (psw : string) (email : string) 
             (replych : (AsyncReplyChannel<NewOrLoginUserReply>)) = async{
         
+        if not options.UseEmailValidation then
+            replych.Reply (NewOrLoginUserReply.Failed("Serverī var reģistrēties bez reģistrācijas koda"))
+            Logger.WriteLine "AppServer: GetRegCode - regcode not needed"
+            return state
+        else 
         if not (IsGoodName name) then 
             replych.Reply (NewOrLoginUserReply.Failed("Tāds vārds nederēs"))
             Logger.WriteLine "AppServer: GetRegCode - bad username"
@@ -225,7 +250,7 @@ type AppServer(port, datafolder, addhours, emailserveraddr, emailserverport,
         else 
         let ou2 = OUDByName name userid
         if ou2.IsSome then
-            replych.Reply (NewOrLoginUserReply.Failed("Lietotājs ar šādu vārdu jau ir pierakstijies severī"))
+            replych.Reply (NewOrLoginUserReply.Failed("Lietotājs ar šādu vārdu jau ir pierakstijies serverī"))
             Logger.WriteLine("AppServer: GetRegCode: user name allready in server {0}", name)
             return state
         else 
@@ -397,6 +422,77 @@ type AppServer(port, datafolder, addhours, emailserveraddr, emailserverport,
         Lobby.To.EnterServer user
         _CountRegistrations <- _CountRegistrations + 1
         Logger.WriteLine("AppServer: RegisterNewUser: userid: {0} name: {1}", user.Id, name)
+        return state
+    }
+
+    member private x.RegisterNewUser2 (state : ServerState) (userid : int) 
+            (name : string) (psw : string) 
+            (replych : (AsyncReplyChannel<NewOrLoginUserReply>)) = async{
+
+        let onlineuser = OUDById userid
+        if onlineuser.IsNone then 
+            replych.Reply (NewOrLoginUserReply.Failed("Lietotājs nav pieslēdzies"))
+            Logger.WriteLine "AppServer: RegisterNewUser2 - userid not foud"
+            return state
+        else 
+        let onlineuser = onlineuser.Value
+        if onlineuser.Location <> UserLocation.Raw then 
+            replych.Reply (NewOrLoginUserReply.Failed("Lietotājs nav pieslēdzies"))
+            Logger.WriteLine "AppServer: RegisterNewUser2 - user not Raw"
+            return state
+        else 
+        let ou2 = OUDByName name userid
+        if ou2.IsSome then
+            replych.Reply (NewOrLoginUserReply.Failed("Lietotājs ar šādu vārdu jau ir pierakstijies severī"))
+            Logger.WriteLine("AppServer: RegisterNewUser2: user name allready in server {0}", name)
+            return state
+        else 
+
+        let! bok, userdata  =
+            if onlineuser.UserData.IsSome then
+                async{ return true, onlineuser.UserData }
+            else
+            async{
+                let! userdata = AppUserData.GetUserByNameFromDB(name)
+                match userdata with
+                |Result.Ok ud -> return true, ud
+                |Result.Error ers ->
+                    replych.Reply (NewOrLoginUserReply.Failed("Datu bāzes kļūda"))
+                    Logger.WriteLine("AppServer: RegisterNewUser2: DB error: {0}", ers)
+                    return false, None}
+        if not bok then
+            return state
+        else
+
+        if userdata.IsSome then
+            replych.Reply (NewOrLoginUserReply.Failed("Lietotājs ar šādu vārdu jau ir reģistrācijies"))
+            Logger.WriteLine("AppServer: RegisterNewUser2: user name taken {0}", name)
+            return state
+        else 
+        
+        let userdata = UserData()
+        userdata.Name <- name
+        userdata.Psw <- psw
+        userdata.RegStatus <- UserRegStatus.Registered
+        userdata.RegistrationsDate <- Nullable DateTime.Now
+
+        let! q = AppUserData.AddNew userdata
+        if not q then
+            replych.Reply (NewOrLoginUserReply.Failed("Datu bāzes kļūda"))
+            Logger.WriteLine("AppServer: RegisterNewUser2: DB error")
+            return state
+        else 
+
+        onlineuser.UserData <- Some userdata
+        AppUserData.SetUserDataOriginal userdata
+        let user = onlineuser.User
+        user.SetUserData (user.Id, name, psw)
+        user.SetPoints (userdata.Points, userdata.GamesPlayed)
+        onlineuser.Location <- UserLocation.OnWay
+        replych.Reply (NewOrLoginUserReply.OK user.Id)
+        Lobby.To.EnterServer user
+        _CountRegistrations <- _CountRegistrations + 1
+        Logger.WriteLine("AppServer: RegisterNewUser2: userid: {0} name: {1}", user.Id, name)
         return state
     }
 
@@ -811,7 +907,10 @@ type AppServer(port, datafolder, addhours, emailserveraddr, emailserverport,
                 x.GetRegCode cur_state m.userid m.name m.psw m.email m.ch
 
             |MsgToServer.FromUser (MsgUserToServer.Register m) ->
-                x.RegisterNewUser cur_state m.userid m.name m.psw m.regcode m.ch
+                if options.UseEmailValidation then
+                    x.RegisterNewUser cur_state m.userid m.name m.psw m.regcode m.ch
+                else
+                    x.RegisterNewUser2 cur_state m.userid m.name m.psw m.ch
 
             |MsgToServer.FromUser (MsgUserToServer.LoginUser m) ->
                 x.LogInUser cur_state m.userid m.name m.psw m.ch

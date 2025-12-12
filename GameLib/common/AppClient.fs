@@ -43,6 +43,7 @@ type AppClient(gameform) as this =
     let mutable ClientGame : GameClient option = None
     let mutable OfflineGame : GameServer option = None
     let mutable GWToServer : IMsgTaker<MsgClientToServer> option = None
+    let mutable _UseEmailValidation = false
 
     let ToGameUI = GameForm :> IPlayerToUI 
     let ToClientUI = GameForm :> IClientToUI
@@ -99,6 +100,7 @@ type AppClient(gameform) as this =
 
     let Connection = ClientConnection(FromServer)
 
+    member x.UseEmailValidation with get() = _UseEmailValidation
 
     member x.InitAppClient() =
         MailBox.Start()
@@ -485,7 +487,8 @@ type AppClient(gameform) as this =
         else
         let! msg = statevar.Reader cur_state -1
         match msg with
-        |MsgToClient.FromServer (MsgServerToClient.Connected _) -> 
+        |MsgToClient.FromServer (MsgServerToClient.Connected greeting) -> 
+            _UseEmailValidation <- greeting <> AppData.RetGreetingNoEmailValidation
             let cur_state = {statevar.State with Status = AppClientStatus.Connected}
             return statevar.WithStW (cur_state, x.DoLogIn)
         

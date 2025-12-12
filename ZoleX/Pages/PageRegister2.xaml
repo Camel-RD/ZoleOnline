@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:models="clr-namespace:Zole3.Models"
+             xmlns:local="clr-namespace:Zole3"
+             x:Class="Zole3.Pages.PageRegister2"
+             x:DataType="models:RegisterPageVM"
+             Title="PageRegister">
+
+    <ContentPage.Content>
+        <Grid>
+
+            <StackLayout VerticalOptions="Center">
+
+                <FlexLayout Wrap="Wrap" 
+                            AlignItems="Center" 
+                            JustifyContent="Center">
+
+                    <StackLayout Margin="20,10,10,10" WidthRequest="300">
+
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Vārds: " VerticalOptions="Center"/>
+                            <Entry  Text="{Binding Name}" HorizontalOptions="FillAndExpand"/>
+                        </StackLayout>
+
+                        <StackLayout Orientation="Horizontal" Margin="0,10,0,0">
+                            <Label Text="Parole: " VerticalOptions="Center"/>
+                            <Entry Text="{Binding Psw}" HorizontalOptions="FillAndExpand"/>
+                        </StackLayout>
+
+                    </StackLayout>
+
+                    <StackLayout WidthRequest="200"
+                             MinimumWidthRequest="200"
+                             Margin="10,10,20,10">
+
+                        <Button Text="Reģistrēties" 
+                                Command="{Binding RegisterClickCommand}"
+                                Margin="0,20,0,0">
+                        </Button>
+
+                        <Button Text="Atcelt" 
+                                Command="{Binding CancelClickCommand}"
+                                Margin="0,20,0,0">
+                        </Button>
+
+                    </StackLayout>
+
+                </FlexLayout>
+            </StackLayout>
+        </Grid>
+
+    </ContentPage.Content>
+
+
+</ContentPage>

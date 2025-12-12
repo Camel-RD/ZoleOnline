@@ -1,30 +1,31 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="server\AppData.fs" />
-    <Compile Include="server\IServer.fs" />
-    <Compile Include="server\CalendarData.fs" />
-    <Compile Include="server\UserData.fs" />
-    <Compile Include="server\ServerMessages.fs" />
-    <Compile Include="server\MessagePusher.fs" />
-    <Compile Include="server\User.fs" />
-    <Compile Include="server\GameNew.fs" />
-    <Compile Include="server\GamePlaying.fs" />
-    <Compile Include="server\GameOrganizer.fs" />
-    <Compile Include="server\Lobby.fs" />
-    <Compile Include="server\ServerConnection.fs" />
-    <Compile Include="server\ServerListener.fs" />
-    <Compile Include="server\AppServer.fs" />
+	  <Compile Include="server\AppData.fs" />
+	  <Compile Include="server\IServer.fs" />
+	  <Compile Include="server\CalendarData.fs" />
+	  <Compile Include="server\UserData.fs" />
+	  <Compile Include="server\ServerMessages.fs" />
+	  <Compile Include="server\MessagePusher.fs" />
+	  <Compile Include="server\User.fs" />
+	  <Compile Include="server\GameNew.fs" />
+	  <Compile Include="server\GamePlaying.fs" />
+	  <Compile Include="server\GameOrganizer.fs" />
+	  <Compile Include="server\Lobby.fs" />
+	  <Compile Include="server\ServerConnection.fs" />
+	  <Compile Include="server\ServerListener.fs" />
+	  <Compile Include="server\AppServer.fs" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="FsPickler" Version="5.3.2" />
-    <PackageReference Include="sqlite-net-pcl" Version="1.7.335" />
-    <PackageReference Include="System.Collections.Immutable" Version="1.7.1" />
+    <PackageReference Include="sqlite-net-pcl" Version="1.9.172" />
+    <PackageReference Include="System.Collections.Immutable" Version="10.0.1" />
   </ItemGroup>
 
   <ItemGroup>

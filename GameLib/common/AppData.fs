@@ -5,6 +5,7 @@ open System.Diagnostics
 
 type AppData() =
     static member val Greeting = "ZoleV03"
+    static member val RetGreetingNoEmailValidation = "NoEmailValidation"
 
 type StateVarFlag = |OK |Return |Failed of msg : string
 

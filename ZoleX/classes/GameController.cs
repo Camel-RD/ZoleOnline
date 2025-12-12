@@ -3,9 +3,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using GameLib;
 using System.Collections.Immutable;
-using Xamarin.Forms;
+using Zole3.Pages;
+using Zole3.Models;
 
-namespace ZoleX
+namespace Zole3
 {
     public class GameController : IGameForm
     {
@@ -18,6 +19,7 @@ namespace ZoleX
         private PagePlayerList PagePlayerList = null;
         private PageCalendar PageCalendar = null;
         private PageRegister PageRegister = null;
+        private PageRegister2 PageRegister2 = null;
         private PageNewGame PageNewGame = null;
         private PageNewPrivateGame PageNewPrivateGame = null;
         private PageGame GamePage = null;
@@ -83,22 +85,23 @@ namespace ZoleX
             PageCalendar = new PageCalendar();
             PageRegHelp = new PageRegHelp();
             PageRegister = new PageRegister();
+            PageRegister2 = new PageRegister2();
             PageLobby = new PageLobby();
             PageNewGame = new PageNewGame();
             PageNewPrivateGame = new PageNewPrivateGame();
             PageWait = new PageWait();
 
-            StartUpPageVM = new StartUpPageVM();
-            SettingsPageVM = new SettingsPageVM();
-            LogInPageVM = new LogInPageVM();
-            RegisterPageVM = new RegisterPageVM();
-            LobbyPageVM = new LobbyPageVM();
-            CalendarPageVM = new CalendarPageVM();
-            NewGamePageVM = new NewGamePageVM();
-            NewPrivateGamePageVM = new NewPrivateGamePageVM();
-            GamePageVM = new GamePageVM();
-            PointsPageVM = new PointsPageVM();
-            WaititngPageVM = new WaititngPageVM();
+            StartUpPageVM = StartUpPageVM.ST;
+            SettingsPageVM = SettingsPageVM.ST;
+            LogInPageVM = LogInPageVM.ST;
+            RegisterPageVM = RegisterPageVM.ST;
+            LobbyPageVM = LobbyPageVM.ST;
+            CalendarPageVM = CalendarPageVM.ST;
+            NewGamePageVM = NewGamePageVM.ST;
+            NewPrivateGamePageVM = NewPrivateGamePageVM.ST;
+            GamePageVM = GamePageVM.ST;
+            PointsPageVM = PointsPageVM.DTST;
+            WaititngPageVM = WaititngPageVM.ST;
 
 
             PageStartUp.BindingContext = StartUpPageVM;
@@ -106,6 +109,7 @@ namespace ZoleX
             PageLogIn.BindingContext = LogInPageVM;
             PageRegHelp.BindingContext = LogInPageVM;
             PageRegister.BindingContext = RegisterPageVM;
+            PageRegister2.BindingContext = RegisterPageVM;
             PageLobby.BindingContext = LobbyPageVM;
             PagePlayerList.BindingContext = LobbyPageVM;
             PageCalendar.BindingContext = CalendarPageVM;
@@ -162,6 +166,12 @@ namespace ZoleX
             Init();
         }
 
+        public Page MainPage
+        {
+            get => App.Windows[0].Page;
+            set => App.Windows[0].Page = value;
+        }
+
         void Init()
         {
             ShowNames("", "", "", -1, 0);
@@ -188,7 +198,7 @@ namespace ZoleX
 
             StartGame();
 
-            App.MainPage = PageStartUp;
+            MainPage = PageStartUp;
         }
 
         void PlayOfflineGame()
@@ -196,7 +206,7 @@ namespace ZoleX
             UserName = StartUpPageVM.PlayerName;
             WriteToRegistry();
             LocalPlayerNr = 0;
-            PlayerNames = new[] { UserName, "Askolds", "Haralds" };
+            PlayerNames = [ UserName, "Askolds", "Haralds" ];
 
             GamePageVM.PlayerName1 = PlayerNames[NextPlayerNr];
             GamePageVM.PlayerName2 = PlayerNames[LocalPlayerNr];
@@ -205,7 +215,7 @@ namespace ZoleX
             PointsPageVM.PlayerName2 = PlayerNames[1];
             PointsPageVM.PlayerName3 = PlayerNames[2];
 
-            App.MainPage = GamePage;
+            MainPage = GamePage;
             IsOnlineGame = false;
             ToClient.PlayOffline(UserName);
         }
@@ -218,12 +228,13 @@ namespace ZoleX
 
         public void ShowMessage(string msg)
         {
-            App.MainPage?.DisplayAlert("", msg, "OK");
+            MainPage?.DisplayAlert("", msg, "OK");
         }
 
         private void StartUpPageVM_Started(object sender, StringEventArgs e)
         {
             var playername = e.EventData;
+            
             if (string.IsNullOrEmpty(playername))
             {
                 ShowMessage("Jānorāda vārds!");
@@ -261,13 +272,13 @@ namespace ZoleX
             SettingsPageVM.ServerIp = ServerIp;
             SettingsPageVM.ServerPort = ServerPort;
 
-            App.MainPage = PageSettings;
+            MainPage = PageSettings;
         }
 
         private void StartUpPageVM_BtExitClicked(object sender, EventArgs e)
         {
             WriteToRegistry();
-            App.DoQuit();
+            App.Quit();
         }
 
         private void SettingsPageVM_BtOkClicked(object sender, EventArgs e)
@@ -289,30 +300,33 @@ namespace ZoleX
                 WriteToRegistry();
                 StartUpPageVM.ShowOnlineGame = !HideOnlineGameButton;
             }
-            App.MainPage = PageStartUp;
+            MainPage = PageStartUp;
         }
 
         private void LogInPageVM_BtCancelClicked(object sender, EventArgs e)
         {
             ToClient.Disconnect();
-            App.MainPage = PageStartUp;
+            MainPage = PageStartUp;
         }
 
         private void LogInPageVM_BtCloeseHelpClicked(object sender, EventArgs e)
         {
-            App.MainPage = PageLogIn;
+            MainPage = PageLogIn;
         }
 
         private void LogInPageVM_BtHelpClicked(object sender, EventArgs e)
         {
-            App.MainPage = PageRegHelp;
+            MainPage = PageRegHelp;
         }
 
         private void LogInPageVM_BtRegisterClicked(object sender, EventArgs e)
         {
             string name = LogInPageVM.Name;
             RegisterPageVM.Name = name;
-            App.MainPage = PageRegister;
+            if (AppClient.UseEmailValidation)
+                MainPage = PageRegister;
+            else
+                MainPage = PageRegister2;
         }
 
         private void LogInPageVM_BtLogInClicked(object sender, EventArgs e)
@@ -367,15 +381,18 @@ namespace ZoleX
                 ShowMessage("Jānorāda parole");
                 return;
             }
-            if (string.IsNullOrEmpty(regcode))
+            if (AppClient.UseEmailValidation)
             {
-                ShowMessage("Jānorāda reģistrācijas kods");
-                return;
-            }
-            if (name.Length > 15 || psw.Length > 15 || regcode.Length > 15)
-            {
-                ShowMessage("Ievadīts pārāk garšs teksts");
-                return;
+                if (string.IsNullOrEmpty(regcode))
+                {
+                    ShowMessage("Jānorāda reģistrācijas kods");
+                    return;
+                }
+                if (name.Length > 15 || psw.Length > 15 || regcode.Length > 15)
+                {
+                    ShowMessage("Ievadīts pārāk garšs teksts");
+                    return;
+                }
             }
             UserName = name;
             UserPsw = psw;
@@ -416,13 +433,13 @@ namespace ZoleX
         private void RegisterPageVM_BtCancelClicked(object sender, EventArgs e)
         {
             ToClient.Disconnect();
-            App.MainPage = PageStartUp;
+            App.Windows[0].Page = PageStartUp;
         }
 
         private void LobbyPageVM_BtExitClicked(object sender, EventArgs e)
         {
             ToClient.Disconnect();
-            App.MainPage = PageStartUp;
+            MainPage = PageStartUp;
         }
 
         private void LobbyPageVM_BtJoinGameClicked(object sender, EventArgs e)
@@ -432,17 +449,17 @@ namespace ZoleX
 
         private void LobbyPageVM_BtJoinPrivateGameClicked(object sender, EventArgs e)
         {
-            App.MainPage = PageNewPrivateGame;
+            MainPage = PageNewPrivateGame;
         }
 
         private void LobbyPageVM_BtBackFromListClicked(object sender, EventArgs e)
         {
-            App.MainPage = PageLobby;
+            MainPage = PageLobby;
         }
 
         private void LobbyPageVM_BtListPlayersClicked(object sender, EventArgs e)
         {
-            App.MainPage = PagePlayerList;
+            MainPage = PagePlayerList;
         }
 
         private void CalendarPageVM_GetUserListClicked(object sender, StringEventArgs e)
@@ -453,14 +470,14 @@ namespace ZoleX
 
         private void CalendarPageVM_BtBackClick(object sender, EventArgs e)
         {
-            App.MainPage = PageLobby;
+            MainPage = PageLobby;
         }
 
         private void CalendarPageVM_BtSendDataClicked(object sender, StringEventArgs e)
         {
             if (string.IsNullOrEmpty(e.EventData)) return;
             ToClient.SetCalendarData(e.EventData);
-            App.MainPage = PageLobby;
+            MainPage = PageLobby;
         }
 
         private void LobbyPageVM_BtCalendarClicked(object sender, EventArgs e)
@@ -492,7 +509,7 @@ namespace ZoleX
 
         private void NewPrivateGamePageVM_BtCancelClicked(object sender, EventArgs e)
         {
-            App.MainPage = PageLobby;
+            MainPage = PageLobby;
         }
 
 
@@ -528,7 +545,7 @@ namespace ZoleX
             {
                 state = EState.none;
                 PointsPageVM.ShowYesNo = false;
-                App.MainPage = GamePage;
+                MainPage = GamePage;
                 ToGame.ReplyStartNewGame(true);
                 return;
             }
@@ -565,14 +582,14 @@ namespace ZoleX
 
         public void WriteToRegistry()
         {
-            App.Properties["Name"] = UserName;
-            App.Properties["Psw"] = UserPsw;
-            App.Properties["ShowArrow"] = ShowArrow ? "Yes" : "No";
-            App.Properties["RememberPsw"] = RememberPsw ? "Yes" : "No";
-            App.Properties["HideOnlineBt"] = HideOnlineGameButton ? "Yes" : "No";
-            App.Properties["IP"] = ServerIp;
-            App.Properties["Port"] = ServerPort;
-            App.SavePropertiesAsync();
+
+            Preferences.Set("Name", UserName);
+            Preferences.Set("Psw", UserPsw);
+            Preferences.Set("ShowArrow", ShowArrow ? "Yes" : "No");
+            Preferences.Set("RememberPsw", RememberPsw ? "Yes" : "No");
+            Preferences.Set("HideOnlineBt", HideOnlineGameButton ? "Yes" : "No");
+            Preferences.Set("IP", ServerIp);
+            Preferences.Set("Port", ServerPort);
         }
 
         public void ReadFromRegistry()
@@ -584,20 +601,21 @@ namespace ZoleX
             HideOnlineGameButton = false;
             ServerIp = "klons.id.lv";
             ServerPort = "7777";
-            if (App.Properties.ContainsKey("Name"))
-                UserName = (string)App.Properties["Name"];
-            if (App.Properties.ContainsKey("Psw"))
-                UserPsw = (string)App.Properties["Psw"];
-            if (App.Properties.ContainsKey("ShowArrow"))
-                ShowArrow = (string)App.Properties["ShowArrow"] == "Yes";
-            if (App.Properties.ContainsKey("RememberPsw"))
-                RememberPsw = (string)App.Properties["RememberPsw"] == "Yes";
-            if (App.Properties.ContainsKey("HideOnlineBt"))
-                HideOnlineGameButton = (string)App.Properties["HideOnlineBt"] == "Yes";
-            if (App.Properties.ContainsKey("IP"))
-                ServerIp = (string)App.Properties["IP"];
-            if (App.Properties.ContainsKey("Port"))
-                ServerPort = (string)App.Properties["Port"];
+            
+            if (Preferences.ContainsKey("Name"))
+                UserName = Preferences.Get("Name", null);
+            if (Preferences.ContainsKey("Psw"))
+                UserPsw = Preferences.Get("Psw", null);
+            if (Preferences.ContainsKey("ShowArrow"))
+                ShowArrow = Preferences.Get("ShowArrow", "Yes") == "Yes";
+            if (Preferences.ContainsKey("RememberPsw"))
+                RememberPsw = Preferences.Get("RememberPsw", "Yes") == "Yes";
+            if (Preferences.ContainsKey("HideOnlineBt"))
+                HideOnlineGameButton = Preferences.Get("HideOnlineBt", "No") == "Yes";
+            if (Preferences.ContainsKey("IP"))
+                ServerIp = Preferences.Get("IP", null);
+            if (Preferences.ContainsKey("Port"))
+                ServerPort = Preferences.Get("Port", null);
         }
 
         public void HideThings()
@@ -667,7 +685,8 @@ namespace ZoleX
                 {
                     int t = IsOnlineGame ? 1200 : 2000;
                     await Task.Delay(t);
-                    Device.BeginInvokeOnMainThread(() => { DoOnGO(); });
+                    //Device.BeginInvokeOnMainThread(() => { DoOnGO(); });
+                    MainPage.Dispatcher.Dispatch(() => { DoOnGO(); });
                 });
             }
         }
@@ -691,7 +710,7 @@ namespace ZoleX
             GamePageVM.IsButtonZoleVisible = false;
             PointsPageVM.ShowYesNo = false;
             ShowText("");
-            App.MainPage = GamePage;
+            MainPage = GamePage;
         }
 
         public void ReplyYesNoZole(bool yesno, bool zole)
@@ -708,7 +727,7 @@ namespace ZoleX
                 state = EState.none;
                 if(!yesno && !IsOnlineGame)
                 {
-                    App.DoQuit();
+                    App.Quit();
                     return;
                 }
                 ToGame.ReplyStartNewGame(yesno);
@@ -944,9 +963,9 @@ namespace ZoleX
 
             UserCards = playerCards[0];
 
-            if (firstPlayerNr == localplayernr) cnrs = new int[3] { 1, 0, 2 };
-            else if (firstPlayerNr == GetPriorPlayerNr(localplayernr)) cnrs = new int[3] { 2, 1, 0 };
-            else if (firstPlayerNr == GetNextPlayerNr(localplayernr)) cnrs = new int[3] { 0, 2, 1 };
+            if (firstPlayerNr == localplayernr) cnrs = [ 1, 0, 2 ];
+            else if (firstPlayerNr == GetPriorPlayerNr(localplayernr)) cnrs = [ 2, 1, 0 ];
+            else if (firstPlayerNr == GetNextPlayerNr(localplayernr)) cnrs = [ 0, 2, 1 ];
 
             n = cardsOnDesk.Cards.Count;
             for (i = 0; i < n; i++)
@@ -1037,28 +1056,28 @@ namespace ZoleX
                 //PointsPageVM.ShowArrow = ShowArrow;
                 PointsPageVM.ShowArrow = false;
                 PointsPageVM.ShowYesNo = false;
-                App.MainPage = PagePoints;
+                MainPage = PagePoints;
             }
             else
-                App.MainPage = GamePage;
+                MainPage = GamePage;
         }
 
 
         public void Wait(string msg)
         {
             WaititngPageVM.ST.Message = msg;
-            App.MainPage = PageWait;
+            MainPage = PageWait;
         }
 
         public void DoStartUp()
         {
-            App.MainPage = PageStartUp;
+            MainPage = PageStartUp;
         }
 
         public void ConnectionFailed(string msg)
         {
             ShowMessage("Neizdevās pieslēgties serverim\n\n" + msg);
-            App.MainPage = PageStartUp;
+            MainPage = PageStartUp;
         }
 
         public void GoToLoginPage()
@@ -1066,12 +1085,12 @@ namespace ZoleX
             IsOnlineGame = true;
             LogInPageVM.Name = UserName;
             LogInPageVM.Psw = UserPsw;
-            App.MainPage = PageLogIn;
+            MainPage = PageLogIn;
         }
 
         public void GoToRegisterPage()
         {
-            App.MainPage = PageRegister;
+            MainPage = PageRegister;
         }
 
         public void ShowMessage2(string msg)
@@ -1082,7 +1101,7 @@ namespace ZoleX
         public void GoToLobby()
         {
             PointsPageVM.Clear();
-            App.MainPage = PageLobby;
+            MainPage = PageLobby;
         }
 
         public void SetLobbyData(LobbyData data)
@@ -1172,13 +1191,13 @@ namespace ZoleX
         public void GoToNewGame()
         {
             NewGamePageVM.Players.Clear();
-            App.MainPage = PageNewGame;
+            MainPage = PageNewGame;
         }
 
         public void CancelNewGame(string msg)
         {
             ShowMessage("Spēles sagatavošana pārtraukta");
-            App.MainPage = PageLobby;
+            MainPage = PageLobby;
         }
 
         public void GotPlayerForNewGame(string name, string info)
@@ -1200,7 +1219,7 @@ namespace ZoleX
         {
             if (string.IsNullOrEmpty(data)) return;
             if (!CalendarPageVM.SetData(data)) return;
-            App.MainPage = PageCalendar;
+            MainPage = PageCalendar;
         }
 
         public void CalendarTagData(string data)

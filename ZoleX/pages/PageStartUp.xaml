@@ -1,19 +1,18 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:i="clr-namespace:Behaviors;assembly=Behaviors"
-             xmlns:local="clr-namespace:ZoleX"
-             mc:Ignorable="d"
-             x:Class="ZoleX.PageStartUp"
-             BackgroundColor="{DynamicResource PageBackgroundColor}"
-             d:BindingContext="{Binding Source={x:Static local:Locator.StartUpPageVM}}">
-    
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:models="clr-namespace:Zole3.Models"
+             xmlns:local="clr-namespace:Zole3"
+             x:Class="Zole3.Pages.PageStartUp"
+             x:DataType="models:StartUpPageVM"
+             Title="PageStartUp">
+
+
     <ContentPage.Content>
         <Grid>
             <StackLayout VerticalOptions="Center">
-                
+
                 <FlexLayout Wrap="Wrap" 
                             AlignItems="Center" 
                             JustifyContent="Center">
@@ -21,7 +20,7 @@
                     <StackLayout Margin="20">
 
                         <Label Text="Tavs vārds:" Margin="0"/>
-                        <local:MyEntry WidthRequest="200" 
+                        <Entry WidthRequest="200" 
                                    Text="{Binding PlayerName}"/>
 
                     </StackLayout>
@@ -31,40 +30,19 @@
                              Margin="20">
 
                         <Button Text="Sākam spēli" 
-                        Margin="0,0,0,0">
-                            <Button.Behaviors>
-                                <i:EventHandlerBehavior EventName="Clicked">
-                                    <i:InvokeMethodAction TargetObject="{Binding}" MethodName="OnStarted" />
-                                </i:EventHandlerBehavior>
-                            </Button.Behaviors>
+                                Command="{Binding StartedCommand}"
+                                Margin="0,0,0,0">
                         </Button>
 
                         <Button Text="Online spēle" 
-                        Margin="0,20,0,0" IsVisible="{Binding Path=ShowOnlineGame}">
-
-                            <Button.Behaviors>
-                                <i:EventHandlerBehavior EventName="Clicked">
-                                    <i:InvokeMethodAction TargetObject="{Binding}" MethodName="OnBtPlayOnlineClick" />
-                                </i:EventHandlerBehavior>
-                            </Button.Behaviors>
+                                Command="{Binding BtPlayOnlineClickCommand}"
+                                Margin="0,20,0,0" 
+                                IsVisible="{Binding Path=ShowOnlineGame}">
                         </Button>
 
                         <Button Text="Parametri" 
-                        Margin="0,20,0,0">
-                            <Button.Behaviors>
-                                <i:EventHandlerBehavior EventName="Clicked">
-                                    <i:InvokeMethodAction TargetObject="{Binding}" MethodName="OnBtSettingsClicked" />
-                                </i:EventHandlerBehavior>
-                            </Button.Behaviors>
-                        </Button>
-
-                        <Button Text="Aizvērt" 
-                        Margin="0,20,0,0">
-                            <Button.Behaviors>
-                                <i:EventHandlerBehavior EventName="Clicked">
-                                    <i:InvokeMethodAction TargetObject="{Binding}" MethodName="OnBtExitClicked" />
-                                </i:EventHandlerBehavior>
-                            </Button.Behaviors>
+                                Command="{Binding BtSettingsClickedCommand}"
+                                Margin="0,20,0,0">
                         </Button>
 
                     </StackLayout>
@@ -72,5 +50,7 @@
                 </FlexLayout>
             </StackLayout>
         </Grid>
+        
     </ContentPage.Content>
+
 </ContentPage>

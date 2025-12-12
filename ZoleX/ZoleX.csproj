@@ -1,69 +1,229 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
-    <Authors>CamelRD</Authors>
-    <Company>CamelRD</Company>
-    <PackageId>Zole</PackageId>
-    <Product>Zole</Product>
-    <ApplicationIcon />
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFrameworks>net10.0-android36.0</TargetFrameworks>
+		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net10.0-windows10.0.19041.0</TargetFrameworks>
 
-  <ItemGroup>
-    <PackageReference Include="Behaviors.Forms" Version="1.4.0" />
-    <PackageReference Include="FSharp.Core" Version="4.7.2" />
-    <PackageReference Include="FsPickler" Version="5.3.2" />
-    <PackageReference Include="Xamarin.Forms" Version="4.8.0.1364" />
-    <PackageReference Include="Xamarin.Essentials" Version="1.5.3.2" />
-  </ItemGroup>
+		<OutputType>Exe</OutputType>
+		<RootNamespace>Zole3</RootNamespace>
+		<UseMaui>true</UseMaui>
+		<SingleProject>true</SingleProject>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>disable</Nullable>
+		<NoWarn>XC0103</NoWarn>
+		<MauiEnableXamlCBindingWithSourceCompilation>true</MauiEnableXamlCBindingWithSourceCompilation>
 
-  <ItemGroup>
-    <ProjectReference Include="..\GameLib\GameLib.fsproj" />
-  </ItemGroup>
+		<Authors>CamelRD</Authors>
+		<Company>CamelRD</Company>
 
-  <ItemGroup>
-    <EmbeddedResource Update="DarkTheme.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="pages\PageCalendar.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="pages\PageNewPrivateGame.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="pages\PageNewGame.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="pages\PagePlayerList.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="pages\PageLobby.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="pages\PageRegister.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="pages\PageRegHelp.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="pages\PageLogIn.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="pages\PageSettings.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="pages\PageGame.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="pages\PagePoints.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="pages\PageStartUp.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="pages\PageWait.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-  </ItemGroup>
+		<!-- Display name -->
+		<ApplicationTitle>Zole</ApplicationTitle>
+
+		<!-- App Identifier -->
+		<ApplicationId>com.CamelRd.Zole</ApplicationId>
+
+		<!-- Versions -->
+		<ApplicationDisplayVersion>9.0</ApplicationDisplayVersion>
+		<ApplicationVersion>9</ApplicationVersion>
+
+		<!-- To develop, package, and publish an app to the Microsoft Store, see: https://aka.ms/MauiTemplateUnpackaged -->
+		<WindowsPackageType>None</WindowsPackageType>
+
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">15.0</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">24.0</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
+		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
+		<NuGetAudit>False</NuGetAudit>
+		<PackageId>Zole</PackageId>
+		<Product>Zole</Product>
+		<AssemblyName>Zole</AssemblyName>
+		<Version>8.0</Version>
+		<AndroidSigningKeyStore>CamelRd.keystore</AndroidSigningKeyStore>
+		<AndroidSupportedAbis>armeabi-v7a</AndroidSupportedAbis>
+		<RuntimeIdentifiers Condition="$(TargetFramework.Contains('-android'))">android-arm</RuntimeIdentifiers>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net9.0-windows10.0.19041.0|AnyCPU'">
+	  <ApplicationId>com.CamelRd.Zole</ApplicationId>
+	  <ApplicationTitle>Zole</ApplicationTitle>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net10.0-android36.0|AnyCPU'">
+	  <ApplicationId>com.CamelRd.Zole</ApplicationId>
+	  <ApplicationTitle>Zole</ApplicationTitle>
+	  <AndroidUseAapt2>True</AndroidUseAapt2>
+	  <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
+	  <AndroidPackageFormat>apk</AndroidPackageFormat>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net10.0-windows10.0.19041.0|AnyCPU'">
+	  <ApplicationId>com.CamelRd.Zole</ApplicationId>
+	  <ApplicationTitle>Zole</ApplicationTitle>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-android36.0|AnyCPU'">
+	  <ApplicationId>com.CamelRd.Zole</ApplicationId>
+	  <ApplicationTitle>Zole</ApplicationTitle>
+	  <AndroidPackageFormat>apk</AndroidPackageFormat>
+	  <AndroidUseAapt2>True</AndroidUseAapt2>
+	  <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-windows10.0.19041.0|AnyCPU'">
+	  <ApplicationId>com.CamelRd.Zole</ApplicationId>
+	  <ApplicationTitle>Zole</ApplicationTitle>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<!-- App Icon -->
+		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#000000" />
+
+		<!-- Splash Screen -->
+		<MauiSplashScreen Include="Resources\Splash\logo.svg" Color="#000000" />
+
+		<!-- Images -->
+		<MauiImage Include="Resources\Images\*" />
+		<MauiImage Update="Resources\Images\dotnet_bot.png" Resize="True" BaseSize="300,185" />
+		
+		<!-- Custom Fonts -->
+		<MauiFont Include="Resources\Fonts\*" />
+
+		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
+		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="Resources\Img\c1.png" />
+	  <None Remove="Resources\Img\c10.png" />
+	  <None Remove="Resources\Img\c9.png" />
+	  <None Remove="Resources\Img\cj.png" />
+	  <None Remove="Resources\Img\ck.png" />
+	  <None Remove="Resources\Img\cq.png" />
+	  <None Remove="Resources\Img\d1.png" />
+	  <None Remove="Resources\Img\d10.png" />
+	  <None Remove="Resources\Img\d7.png" />
+	  <None Remove="Resources\Img\d8.png" />
+	  <None Remove="Resources\Img\d9.png" />
+	  <None Remove="Resources\Img\dj.png" />
+	  <None Remove="Resources\Img\dk.png" />
+	  <None Remove="Resources\Img\dq.png" />
+	  <None Remove="Resources\Img\ec.png" />
+	  <None Remove="Resources\Img\empty.png" />
+	  <None Remove="Resources\Img\h1.png" />
+	  <None Remove="Resources\Img\h10.png" />
+	  <None Remove="Resources\Img\h9.png" />
+	  <None Remove="Resources\Img\hj.png" />
+	  <None Remove="Resources\Img\hk.png" />
+	  <None Remove="Resources\Img\hq.png" />
+	  <None Remove="Resources\Img\jb.png" />
+	  <None Remove="Resources\Img\jr.png" />
+	  <None Remove="Resources\Img\s1.png" />
+	  <None Remove="Resources\Img\s10.png" />
+	  <None Remove="Resources\Img\s9.png" />
+	  <None Remove="Resources\Img\sj.png" />
+	  <None Remove="Resources\Img\sk.png" />
+	  <None Remove="Resources\Img\sq.png" />
+	</ItemGroup>
+
+
+	<ItemGroup>
+	  <MauiImage Include="Resources\Img\c1.png" />
+	  <MauiImage Include="Resources\Img\c10.png" />
+	  <MauiImage Include="Resources\Img\c9.png" />
+	  <MauiImage Include="Resources\Img\cj.png" />
+	  <MauiImage Include="Resources\Img\ck.png" />
+	  <MauiImage Include="Resources\Img\cq.png" />
+	  <MauiImage Include="Resources\Img\d1.png" />
+	  <MauiImage Include="Resources\Img\d10.png" />
+	  <MauiImage Include="Resources\Img\d7.png" />
+	  <MauiImage Include="Resources\Img\d8.png" />
+	  <MauiImage Include="Resources\Img\d9.png" />
+	  <MauiImage Include="Resources\Img\dj.png" />
+	  <MauiImage Include="Resources\Img\dk.png" />
+	  <MauiImage Include="Resources\Img\dq.png" />
+	  <MauiImage Include="Resources\Img\ec.png" />
+	  <MauiImage Include="Resources\Img\empty.png" />
+	  <MauiImage Include="Resources\Img\h1.png" />
+	  <MauiImage Include="Resources\Img\h10.png" />
+	  <MauiImage Include="Resources\Img\h9.png" />
+	  <MauiImage Include="Resources\Img\hj.png" />
+	  <MauiImage Include="Resources\Img\hk.png" />
+	  <MauiImage Include="Resources\Img\hq.png" />
+	  <MauiImage Include="Resources\Img\jb.png" />
+	  <MauiImage Include="Resources\Img\jr.png" />
+	  <MauiImage Include="Resources\Img\s1.png" />
+	  <MauiImage Include="Resources\Img\s10.png" />
+	  <MauiImage Include="Resources\Img\s9.png" />
+	  <MauiImage Include="Resources\Img\sj.png" />
+	  <MauiImage Include="Resources\Img\sk.png" />
+	  <MauiImage Include="Resources\Img\sq.png" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="CommunityToolkit.Maui" Version="13.0.0" />
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+		<PackageReference Include="Microsoft.Maui.Controls" Version="10.0.11" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\GameLib\GameLib.fsproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Update="Pages\PageRegister2.xaml.cs">
+	    <DependentUpon>PageRegister2.xaml</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiXaml Update="Pages\InitPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\PageCalendar.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\PageGame.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\PageLobby.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\PageLogIn.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\PageNewGame.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\PageNewPrivateGame.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\PagePlayerList.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\PagePoints.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\PageRegHelp.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\PageRegister2.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\PageRegister.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\PageSettings.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\PageStartUp.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\PageWait.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	</ItemGroup>
+
 </Project>

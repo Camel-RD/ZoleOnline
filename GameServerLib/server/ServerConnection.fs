@@ -47,7 +47,8 @@ type ServerConnection(Socket : TcpClient) =
         if NetStream.IsSome then
             try
                 NetStream.Value.Close()
-                NetStream.Value.Dispose()
+                if NetStream.IsSome then
+                    NetStream.Value.Dispose()
             finally
                 NetStream <- None
         try

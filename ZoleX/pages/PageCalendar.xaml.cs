@@ -1,23 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Zole3.Models;
 
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
+namespace Zole3.Pages;
 
-namespace ZoleX
+public partial class PageCalendar : ContentPage
 {
-    [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class PageCalendar : ContentPage
-    {
-        public PageCalendar()
-        {
-            InitializeComponent();
-            if (DesignMode.IsDesignModeEnabled)
-                BindingContext = new CalendarPageVM();
-
-        }
+	public PageCalendar()
+	{
+		InitializeComponent();
+        if (DesignMode.IsDesignModeEnabled)
+            BindingContext = CalendarPageVM.ST;
     }
 }

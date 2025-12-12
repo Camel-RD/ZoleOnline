@@ -1,21 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29318.209
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36623.8
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZoleW", "ZoleW\ZoleW.csproj", "{42B8DFDD-7B95-4D7A-921D-FF05E67AC81B}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "GameLib", "GameLib\GameLib.fsproj", "{2C722D40-2253-46BE-B47E-A9D2717BE16B}"
 EndProject
-Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "GameLib", "GameLib\GameLib.fsproj", "{60BED652-3EEF-4B98-8F27-D74A7D7F2212}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "GameServerLib", "GameServerLib\GameServerLib.fsproj", "{E805DA46-7699-469D-903F-B29969F6BA4A}"
 EndProject
-Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "GameServerLib", "GameServerLib\GameServerLib.fsproj", "{259C1999-A873-405F-AB0E-8D3700CD52C3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZoleX", "ZoleX\ZoleX.csproj", "{BB66351A-98F7-BDA9-EB5D-A948BDCAC9DD}"
 EndProject
-Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "ZoleServerCore", "ZoleServerCore\ZoleServerCore.fsproj", "{2CB5DAD5-9738-4CC2-844E-A497003F562D}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZoleX", "ZoleX\ZoleX.csproj", "{EE2F076C-7CF1-44EE-88EB-41A2CAC58F15}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZoleX.Android", "ZoleX.Android\ZoleX.Android.csproj", "{3009A880-FC63-432E-BE9F-F5D0BC37F3FE}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZoleX.WPF", "ZoleX.WPF\ZoleX.WPF.csproj", "{902C1A9E-1B1E-4937-8BB8-37F3324B7E7F}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "ZoleServerCore", "ZoleServerCore\ZoleServerCore.fsproj", "{1B99CE54-D868-DE2F-897E-358E13786F39}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,41 +17,28 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{42B8DFDD-7B95-4D7A-921D-FF05E67AC81B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{42B8DFDD-7B95-4D7A-921D-FF05E67AC81B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{42B8DFDD-7B95-4D7A-921D-FF05E67AC81B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{42B8DFDD-7B95-4D7A-921D-FF05E67AC81B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{60BED652-3EEF-4B98-8F27-D74A7D7F2212}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{60BED652-3EEF-4B98-8F27-D74A7D7F2212}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{60BED652-3EEF-4B98-8F27-D74A7D7F2212}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{60BED652-3EEF-4B98-8F27-D74A7D7F2212}.Release|Any CPU.Build.0 = Release|Any CPU
-		{259C1999-A873-405F-AB0E-8D3700CD52C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{259C1999-A873-405F-AB0E-8D3700CD52C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{259C1999-A873-405F-AB0E-8D3700CD52C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{259C1999-A873-405F-AB0E-8D3700CD52C3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2CB5DAD5-9738-4CC2-844E-A497003F562D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2CB5DAD5-9738-4CC2-844E-A497003F562D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2CB5DAD5-9738-4CC2-844E-A497003F562D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2CB5DAD5-9738-4CC2-844E-A497003F562D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EE2F076C-7CF1-44EE-88EB-41A2CAC58F15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EE2F076C-7CF1-44EE-88EB-41A2CAC58F15}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EE2F076C-7CF1-44EE-88EB-41A2CAC58F15}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EE2F076C-7CF1-44EE-88EB-41A2CAC58F15}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3009A880-FC63-432E-BE9F-F5D0BC37F3FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3009A880-FC63-432E-BE9F-F5D0BC37F3FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3009A880-FC63-432E-BE9F-F5D0BC37F3FE}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{3009A880-FC63-432E-BE9F-F5D0BC37F3FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3009A880-FC63-432E-BE9F-F5D0BC37F3FE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3009A880-FC63-432E-BE9F-F5D0BC37F3FE}.Release|Any CPU.Deploy.0 = Release|Any CPU
-		{902C1A9E-1B1E-4937-8BB8-37F3324B7E7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{902C1A9E-1B1E-4937-8BB8-37F3324B7E7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{902C1A9E-1B1E-4937-8BB8-37F3324B7E7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{902C1A9E-1B1E-4937-8BB8-37F3324B7E7F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C722D40-2253-46BE-B47E-A9D2717BE16B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C722D40-2253-46BE-B47E-A9D2717BE16B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C722D40-2253-46BE-B47E-A9D2717BE16B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C722D40-2253-46BE-B47E-A9D2717BE16B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E805DA46-7699-469D-903F-B29969F6BA4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E805DA46-7699-469D-903F-B29969F6BA4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E805DA46-7699-469D-903F-B29969F6BA4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E805DA46-7699-469D-903F-B29969F6BA4A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB66351A-98F7-BDA9-EB5D-A948BDCAC9DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB66351A-98F7-BDA9-EB5D-A948BDCAC9DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB66351A-98F7-BDA9-EB5D-A948BDCAC9DD}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{BB66351A-98F7-BDA9-EB5D-A948BDCAC9DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB66351A-98F7-BDA9-EB5D-A948BDCAC9DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B99CE54-D868-DE2F-897E-358E13786F39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B99CE54-D868-DE2F-897E-358E13786F39}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B99CE54-D868-DE2F-897E-358E13786F39}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B99CE54-D868-DE2F-897E-358E13786F39}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {173146B6-C9B2-4B4E-AFDF-32FB89E2F74D}
+		SolutionGuid = {363E4BA9-46FA-4F9B-A9E8-A8A3A102A824}
 	EndGlobalSection
 EndGlobal

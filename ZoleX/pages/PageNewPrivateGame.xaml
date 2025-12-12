@@ -1,15 +1,13 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
-             xmlns:i="clr-namespace:Behaviors;assembly=Behaviors"
-             xmlns:local="clr-namespace:ZoleX"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d"
-             BackgroundColor="{DynamicResource PageBackgroundColor}"
-             x:Class="ZoleX.PageNewPrivateGame"
-             d:BindingContext="{Binding Source={x:Static local:Locator.NewPrivateGamePageVM}}">
-    
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:models="clr-namespace:Zole3.Models"
+             xmlns:local="clr-namespace:Zole3"
+             x:Class="Zole3.Pages.PageNewPrivateGame"
+             x:DataType="models:NewPrivateGamePageVM"
+             Title="PageNewPrivateGame">
+
     <ContentPage.Content>
         <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
 
@@ -20,35 +18,26 @@
                 <StackLayout Margin="20" WidthRequest="200">
 
                     <Label Text="Spēles nosaukums:" Margin="0"/>
-                    <local:MyEntry WidthRequest="200" 
+                    <Entry WidthRequest="200" 
                                    Text="{Binding Name}"/>
 
                     <Label Text="Spēles parole:" Margin="0,20,0,0"/>
-                    <local:MyEntry WidthRequest="200" 
+                    <Entry WidthRequest="200" 
                                    Text="{Binding Psw}"/>
 
                 </StackLayout>
 
                 <StackLayout Margin="20" WidthRequest="200">
 
-                    <Button Text="Pievienoties" 
-                                HorizontalOptions="FillAndExpand"
-                                Margin="0,0,0,0">
-                        <Button.Behaviors>
-                            <i:EventHandlerBehavior EventName="Clicked">
-                                <i:InvokeMethodAction TargetObject="{Binding}" MethodName="OnJoinClick" />
-                            </i:EventHandlerBehavior>
-                        </Button.Behaviors>
+                    <Button Text="Pievienoties"
+                            Command="{Binding JoinClickCommand}"
+                            HorizontalOptions="Fill"
+                            Margin="0,0,0,0">
                     </Button>
 
                     <Button Text="Atcelt" 
-                        Margin="0,20,0,0">
-
-                        <Button.Behaviors>
-                            <i:EventHandlerBehavior EventName="Clicked">
-                                <i:InvokeMethodAction TargetObject="{Binding}" MethodName="OnCancelClick" />
-                            </i:EventHandlerBehavior>
-                        </Button.Behaviors>
+                            Command="{Binding CancelClickCommand}"
+                            Margin="0,20,0,0">
                     </Button>
 
                 </StackLayout>
@@ -57,4 +46,6 @@
         </StackLayout>
 
     </ContentPage.Content>
+    
+    
 </ContentPage>
