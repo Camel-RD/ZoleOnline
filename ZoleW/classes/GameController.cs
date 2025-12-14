@@ -194,8 +194,10 @@ namespace ZoleW
             if (string.IsNullOrEmpty(UserName)) UserName = "Es";
             StartUpPageVM.PlayerName = UserName;
             StartUpPageVM.ShowOnlineGame = !HideOnlineGameButton;
-            if (string.IsNullOrEmpty(ServerIp)) ServerIp = "klons.id.lv";
+            if (string.IsNullOrEmpty(ServerIp)) ServerIp = "zole.klons.id.lv";
             if (string.IsNullOrEmpty(ServerPort)) ServerPort = "7777";
+            if (ServerIp?.ToLower() == "klons.id.lv")
+                ServerIp = "zole.klons.id.lv";
 
             var gameformwrapped = GameFormWrapper.GetGUIWrapper(this);
             AppClient = new AppClient(gameformwrapped);

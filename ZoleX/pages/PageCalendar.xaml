@@ -38,6 +38,7 @@
                                     HorizontalOptions="Center"
                                     VerticalOptions="Center"
                                     WidthRequest="40"
+                                    Padding="14,4"
                                     Margin="10,3,0,3">
                                 </Button>
 
@@ -53,6 +54,7 @@
                                     HorizontalOptions="Center"
                                     VerticalOptions="Center"
                                     WidthRequest="40"
+                                    Padding="14,4"
                                     Margin="10,3,0,3">
                                 </Button>
 
@@ -61,6 +63,7 @@
                                     HorizontalOptions="Center"
                                     VerticalOptions="Center"
                                     WidthRequest="40"
+                                    Padding="14,4"
                                     Margin="10,3,0,3">
                                 </Button>
 

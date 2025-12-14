@@ -17,9 +17,16 @@ namespace Zole3
         {
             //Window window = base.CreateWindow(activationState);
             Window window = new Window(new InitPage());
-            window.Created += (s, e) =>
+            window.Activated += (s, e) =>
             {
-                // Custom logic
+                GameController = GameController.Create(this);
+                if (LastPage != null && Windows[0].Page != LastPage)
+                    Windows[0].Page = LastPage;
+            };
+            window.Resumed += (s, e) =>
+            {
+                if (LastPage != null && Windows[0].Page != LastPage)
+                    Windows[0].Page = LastPage;
             };
             return window; 
         }
@@ -43,17 +50,22 @@ namespace Zole3
 
         protected override void OnStart()
         {
-            GameController = new GameController(this);
         }
 
+        Page LastPage;
+        
         protected override void OnSleep()
         {
+            base.OnSleep();
             GameController?.DoOnGameClosing();
+            LastPage = Windows[0].Page;
         }
 
         protected override void OnResume()
         {
-            // Handle when your app resumes
+            base.OnResume();
+            if (LastPage != null && Windows[0].Page != LastPage)
+                Windows[0].Page = LastPage;
         }
 
     }

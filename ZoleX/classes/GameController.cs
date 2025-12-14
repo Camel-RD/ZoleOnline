@@ -72,7 +72,18 @@ namespace Zole3
         private int selectedCard1 = -1;
         private int selectedCard2 = -1;
 
-        public GameController(App app)
+        static GameController ST;
+
+        public static GameController Create(App app)
+        {
+            if (ST == null)
+            {
+                ST = new GameController(app);
+            }
+            return ST;
+        }
+
+        private GameController(App app)
         {
             App = app;
 
@@ -616,6 +627,8 @@ namespace Zole3
                 ServerIp = Preferences.Get("IP", null);
             if (Preferences.ContainsKey("Port"))
                 ServerPort = Preferences.Get("Port", null);
+            if (ServerIp?.ToLower() == "klons.id.lv")
+                ServerIp = "zole.klons.id.lv";
         }
 
         public void HideThings()
